@@ -21,9 +21,12 @@ var stream = fs.createReadStream(dataFilePath)
             var transactionData = line.split(',');
             data.push({
                 symbol: 'EURCHF',
-                price: parseFloat(transactionData[5]),
+                timestamp: new Date(transactionData[0] + ' ' + transactionData[1] + ':00').getTime(),
                 volume: parseInt(transactionData[6]),
-                timestamp: new Date(transactionData[0] + ' ' + transactionData[1] + ':00').getTime()
+                open: parseFloat(transactionData[2]),
+                high: parseFloat(transactionData[3]),
+                low: parseFloat(transactionData[4]),
+                close: parseFloat(transactionData[5])
             });
 
             // Resume the read stream.

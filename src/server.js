@@ -47,12 +47,13 @@ var server = ws.createServer(options, function(client) {
             var timestampSeconds = new Date(tickDataPoint.timestamp).getSeconds();
             var analysisResult;
 
-            tickDataPoints.push(tickDataPoint);
+            //tickDataPoints.push(tickDataPoint);
 
             //if (timestampSeconds === 59) {
             if (timestampSeconds === 0) {
                 // Analyze the latest minute ticks.
-                analysisResult = strategy.analyze(summarizeData(tickDataPoints));
+                //analysisResult = strategy.analyze(summarizeData(tickDataPoints));
+                analysisResult = strategy.analyze(tickDataPoint);
 
                 // If analysis sends back a positive result, then initiate a trade.
                 if (analysisResult) {
@@ -64,7 +65,7 @@ var server = ws.createServer(options, function(client) {
                 }
 
                 // Reset the tick points.
-                tickDataPoints = [tickDataPoint];
+                //tickDataPoints = [tickDataPoint];
             }
         }
         catch (error) {
@@ -75,12 +76,15 @@ var server = ws.createServer(options, function(client) {
 
 console.log('Trade service started on port ' + port);
 
-function summarizeData(dataPoints) {
-    return {
-        high: _(dataPoints).max('price').price,
-        low: _(dataPoints).min('price').price,
-        open: _(dataPoints).first().price,
-        close: _(dataPoints).last().price,
-        timestamp: _(dataPoints).last().timestamp
-    };
-}
+//function summarizeData(dataPoints) {
+    //return {
+    //    high: _(dataPoints).max('price').price,
+    //    low: _(dataPoints).min('price').price,
+    //    open: _(dataPoints).first().price,
+    //    close: _(dataPoints).last().price,
+    //    timestamp: _(dataPoints).last().timestamp
+    //};
+
+    // The backtesting data is only minute data, so just use that for testing purposes.
+    //return dataPoint;
+//}

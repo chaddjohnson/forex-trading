@@ -36,6 +36,7 @@
             var profitability = 0.7;
             var currentTimestamp;
             var openPositions = [];
+            var dataPoint;
 
             function updateAccountBalance(newBalance) {
                 accountBalance = newBalance;
@@ -66,51 +67,53 @@
             // Handle new data coming in.
             dataSocket.onmessage = function(event) {
                 // Parse the incoming data.
-                var data = JSON.parse(event.data);
-
-                // Translate the data into a format our server expects.
-                var tradeData = {
-                    security: 'EURCHF',
-                    price: data.price,
-                    volume: data.volume,
-                    timestamp: data.timestamp
-                };
+                dataPoint = JSON.parse(event.data);
 
                 // Close any positions that have expired.
-                closeExpiredPositions(data.price, data.timestamp);
+                closeExpiredPositions(dataPoint.open, dataPoint.timestamp);
 
-                updateCurrentPrice(data.price);
-                $('#timestamp').text(new Date(data.timestamp));
+                updateCurrentPrice(dataPoint.open);
+                $('#timestamp').text(new Date(dataPoint.timestamp));
 
                 // Update the current timestamp.
-                currentTimestamp = tradeData.timestamp;
+                currentTimestamp = dataPoint.timestamp;
 
                 // Forward the translated data to our server.
-                tradingSocket.send(JSON.stringify(tradeData));
+                tradingSocket.send(JSON.stringify(dataPoint));
             };
 
             // Handle instructions coming in from our server.
             tradingSocket.onmessage = function(event) {
-                var data = JSON.parse(event.data);
+                var message = JSON.parse(event.data);
 
-                if (data.type === 'buy') {
+                if (message.type === 'buy') {
                     // Set the investment amount.
                     $('#investment').val(investment);
 
-                    if (data.direction === 'CALL') {
+                    if (message.direction === 'CALL') {
                         $('#callButton').click();
                     }
-                    else if (data.direction === 'PUT') {
+                    else if (message.direction === 'PUT') {
                         $('#putButton').click();
                     }
 
                     // Track the open position.
                     openPositions.push({
-                        symbol: data.symbol,
-                        direction: data.direction,
-                        investment: data.investment,
-                        price: currentPrice,
-                        timestamp: currentTimestamp
+                        symbol: message.symbol,
+                        direction: message.direction,
+                        investment: message.investment,
+                        price: dataPoint.close,
+                        timestamp: currentTimestamp + (1000 * 59),
+                        expirationTimestamp: currentTimestamp + (6 * 1000 * 60)
+                    });
+
+                    console.log({
+                        symbol: message.symbol,
+                        direction: message.direction,
+                        investment: message.investment,
+                        price: dataPoint.close,
+                        timestamp: currentTimestamp + (1000 * 59),
+                        expirationTimestamp: currentTimestamp + (6 * 1000 * 60)
                     });
                 }
             };
