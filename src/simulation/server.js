@@ -65,7 +65,7 @@ function startServer() {
             if (dataIndex < dataCount - 1) {
                 setTimeout(function() {
                     sendNext(data[++dataIndex]);
-                }, 1);
+                }, 2);
             }
         };
 

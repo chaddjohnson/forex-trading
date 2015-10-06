@@ -2,6 +2,8 @@
   "name": "forex-trading",
   "dependencies": {
     "event-stream": "^3.3.1",
-    "nodejs-websocket": "^1.4.0"
+    "nodejs-websocket": "^1.4.0",
+    "regression": "^1.2.1",
+    "underscore": "^1.8.3"
   }
 }

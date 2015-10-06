@@ -30,13 +30,14 @@
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script>
 
-            // Set the initial account balance.
             var accountBalance = 20000;
-
-            // The amount of each trade.
-            var investmentAmount = 1000;
+            var investment = 1000;
+            var profitability = 0.7;
+            var currentTimestamp;
+            var openPositions = [];
 
             function updateAccountBalance(newBalance) {
+                accountBalance = newBalance;
                 $('#accountBalance').text(newBalance);
             }
 
@@ -45,17 +46,15 @@
                 updateAccountBalance(accountBalance);
 
                 $('#callButton').on('click', function() {
-                    accountBalance -= investmentAmount;
-                    updateAccountBalance(accountBalance);
+                    updateAccountBalance(accountBalance - investment);
                 });
 
                 $('#putButton').on('click', function() {
-                    accountBalance -= investmentAmount;
-                    updateAccountBalance(accountBalance);
+                    updateAccountBalance(accountBalance - investment);
                 });
             });
 
-            // var tradingSocket = new WebSocket('wss://localhost:8080');
+            var tradingSocket = new WebSocket('ws://localhost:8080');
             var dataSocket = new WebSocket('ws://0.0.0.0:8081');
 
             // Handle new data coming in.
@@ -63,33 +62,83 @@
                 // Parse the incoming data.
                 var data = JSON.parse(event.data);
 
-                $('#price').text(data.price);
-                $('#timestamp').text(new Date(data.timestamp));
-
                 // Translate the data into a format our server expects.
                 var tradeData = {
                     security: 'EURCHF',
                     price: data.price,
-                    volume: data.volume
+                    volume: data.volume,
+                    timestamp: data.timestamp
                 };
 
+                // Close any positions that have expired.
+                closeExpiredPositions(data.price, data.timestamp);
+
+                $('#price').text(data.price);
+                $('#timestamp').text(new Date(data.timestamp));
+
+                // Update the current timestamp.
+                currentTimestamp = tradeData.timestamp;
+
                 // Forward the translated data to our server.
-                // tradingSocket.send(JSON.stringify(tradeData));
+                tradingSocket.send(JSON.stringify(tradeData));
             };
 
             // Handle instructions coming in from our server.
-            // tradingSocket.onmessage = function(event) {
-            //     var data = JSON.parse(event.data);
+            tradingSocket.onmessage = function(event) {
+                var data = JSON.parse(event.data);
 
-            //     if (data.type === 'buy') {
-            //         if (data.direction === 'CALL') {
-            //             $('#callButton').click();
-            //         }
-            //         else if (data.direction === 'PUT') {
-            //             $('#putButton').click();
-            //         }
-            //     }
-            // };
+                if (data.type === 'buy') {
+                    // Set the investment amount.
+                    $('#investment').val(investment);
+
+                    if (data.direction === 'CALL') {
+                        $('#callButton').click();
+                    }
+                    else if (data.direction === 'PUT') {
+                        $('#putButton').click();
+                    }
+
+                    // Track the open position.
+                    openPositions.push({
+                        symbol: data.symbol,
+                        direction: data.direction,
+                        investment: data.investment,
+                        timestamp: currentTimestamp
+                    });
+                }
+            };
+
+            function closeExpiredPositions(price, timestamp) {
+                var openPositionsCopy = openPositions.slice();
+
+                openPositionsCopy.forEach(function(position, index) {
+                    var profitLoss = 0.0;
+
+                    // Determine whether the position has expired.
+                    if (timestamp >= position.expirationTimestamp + (5 * 60 * 1000)) {
+                        if (position.direction === 'CALL') {
+                            if (price > position.price) {
+                                updateAccountBalance(accountBalance + position.investment + (profitability * position.investment));
+                            }
+                            else if (price === position.price) {
+                                updateAccountBalance(accountBalance + position.investment);
+                            }
+                        }
+
+                        if (position.direction === 'PUT') {
+                            if (price < position.price) {
+                                updateAccountBalance(accountBalance + position.investment + (profitability * position.investment));
+                            }
+                            else if (price === position.price) {
+                                updateAccountBalance(accountBalance + position.investment);
+                            }
+                        }
+
+                        // Remove the position from the list of open positions.
+                        openPositions.splice(index, 1);
+                    }
+                });
+            }
 
         </script>
     </head>
@@ -104,6 +153,11 @@
 
         <h3>Current price: $<span id="price"></span></h3>
         <h3>Current timestamp: <span id="timestamp"></span></h3>
+
+        <div>
+            <label>Investment:</label>
+            <input id="investment" type="text" />
+        </div>
 
     </body>
 </html>
