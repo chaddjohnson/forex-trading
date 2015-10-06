@@ -246,11 +246,9 @@ Reversals.prototype.analyze = function(dataPoint) {
     this.previousDataPoint = dataPoint;
 
     if (put) {
-        console.log('PUT', dataPoint.close, new Date(dataPoint.timestamp + (1000 * 59)));
         return 'PUT';
     }
     else if (call) {
-        console.log('CALL', dataPoint.close, new Date(dataPoint.timestamp + (1000 * 59)));
         return 'CALL';
     }
 
