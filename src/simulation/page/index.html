@@ -31,6 +31,7 @@
         <script>
 
             var accountBalance = 20000;
+            var currentPrice = 0.0;
             var investment = 1000;
             var profitability = 0.7;
             var currentTimestamp;
@@ -39,6 +40,11 @@
             function updateAccountBalance(newBalance) {
                 accountBalance = newBalance;
                 $('#accountBalance').text(newBalance);
+            }
+
+            function updateCurrentPrice(newPrice) {
+                currentPrice = newPrice;
+                $('#price').text(newPrice);
             }
 
             $(function() {
@@ -73,7 +79,7 @@
                 // Close any positions that have expired.
                 closeExpiredPositions(data.price, data.timestamp);
 
-                $('#price').text(data.price);
+                updateCurrentPrice(data.price);
                 $('#timestamp').text(new Date(data.timestamp));
 
                 // Update the current timestamp.
@@ -103,6 +109,7 @@
                         symbol: data.symbol,
                         direction: data.direction,
                         investment: data.investment,
+                        price: currentPrice,
                         timestamp: currentTimestamp
                     });
                 }
