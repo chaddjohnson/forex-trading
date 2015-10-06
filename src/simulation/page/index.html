@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test Broker</title>
+
+        <style>
+
+            body {
+                background-color: black;
+                color: white;
+            }
+
+            #actions button {
+                width: 100px;
+                height: 50px;
+                color: white;
+                font-size: 20px;
+            }
+
+            #callButton {
+                background-color: green;
+            }
+
+            #putButton {
+                background-color: red;
+            }
+
+        </style>
+
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script>
+
+            // Set the initial account balance.
+            var accountBalance = 20000;
+
+            // The amount of each trade.
+            var investmentAmount = 1000;
+
+            function updateAccountBalance(newBalance) {
+                $('#accountBalance').text(newBalance);
+            }
+
+            $(function() {
+                // Show the initial account balance.
+                updateAccountBalance(accountBalance);
+
+                $('#callButton').on('click', function() {
+                    accountBalance -= investmentAmount;
+                    updateAccountBalance(accountBalance);
+                });
+
+                $('#putButton').on('click', function() {
+                    accountBalance -= investmentAmount;
+                    updateAccountBalance(accountBalance);
+                });
+            });
+
+            // var tradingSocket = new WebSocket('wss://localhost:8080');
+            var dataSocket = new WebSocket('ws://0.0.0.0:8081');
+
+            // Handle new data coming in.
+            dataSocket.onmessage = function(event) {
+                // Parse the incoming data.
+                var data = JSON.parse(event.data);
+
+                $('#price').text(data.price);
+                $('#timestamp').text(new Date(data.timestamp));
+
+                // Translate the data into a format our server expects.
+                var tradeData = {
+                    security: 'EURCHF',
+                    price: data.price,
+                    volume: data.volume
+                };
+
+                // Forward the translated data to our server.
+                // tradingSocket.send(JSON.stringify(tradeData));
+            };
+
+            // Handle instructions coming in from our server.
+            // tradingSocket.onmessage = function(event) {
+            //     var data = JSON.parse(event.data);
+
+            //     if (data.type === 'buy') {
+            //         if (data.direction === 'CALL') {
+            //             $('#callButton').click();
+            //         }
+            //         else if (data.direction === 'PUT') {
+            //             $('#putButton').click();
+            //         }
+            //     }
+            // };
+
+        </script>
+    </head>
+    <body>
+
+        <h1>Account Balance: $<span id="accountBalance"></span></h2>
+
+        <div id="actions">
+            <button id="callButton">CALL</button>
+            <button id="putButton">PUT</button>
+        </div>
+
+        <h3>Current price: $<span id="price"></span></h3>
+        <h3>Current timestamp: <span id="timestamp"></span></h3>
+
+    </body>
+</html>
