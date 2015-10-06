@@ -59,17 +59,6 @@ Reversals.prototype.buildStudyDefinitions = function() {
             }
         });
     }
-    if (this.configuration.ema13) {
-        studyDefinitions.push({
-            study: studies.Ema,
-            inputs: {
-                length: 13
-            },
-            outputMap: {
-                ema: 'ema13'
-            }
-        });
-    }
     if (this.configuration.rsi) {
         studyDefinitions.push({
             study: studies.Rsi,
@@ -166,23 +155,6 @@ Reversals.prototype.analyze = function(dataPoint) {
             call = false;
         }
     }
-    if (this.configuration.ema50 && this.configuration.ema13) {
-        if (!dataPoint.ema50 || !dataPoint.ema13) {
-            put = false;
-            call = false;
-        }
-
-        // Determine if a downtrend is not occurring.
-        if (put && dataPoint.ema50 < dataPoint.ema13) {
-            put = false;
-        }
-
-        // Determine if an uptrend is not occurring.
-        if (call && dataPoint.ema50 > dataPoint.ema13) {
-            call = false;
-        }
-    }
-
     if (this.configuration.rsi) {
         if (typeof dataPoint.rsi === 'number') {
             // Determine if RSI is not above the overbought line.
@@ -200,7 +172,6 @@ Reversals.prototype.analyze = function(dataPoint) {
             call = false;
         }
     }
-
     if (this.configuration.prChannel) {
         if (dataPoint.prChannelUpper && dataPoint.prChannelLower) {
             // Determine if the upper regression bound was not breached by the high price.
@@ -218,7 +189,6 @@ Reversals.prototype.analyze = function(dataPoint) {
             call = false;
         }
     }
-
     if (this.configuration.trendPrChannel) {
         if (this.previousDataPoint && dataPoint.trendPrChannel && this.previousDataPoint.trendPrChannel) {
             // Determine if a long-term downtrend is not occurring.

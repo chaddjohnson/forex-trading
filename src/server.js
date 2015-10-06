@@ -16,7 +16,6 @@ var server = ws.createServer(options, function(client) {
         ema100: false,
         ema50: true,
         sma13: false,
-        ema13: false,
         rsi: {
             length: 7,
             overbought: 77,
