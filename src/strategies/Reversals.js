@@ -113,8 +113,8 @@ Reversals.prototype.buildStudyDefinitions = function() {
 };
 
 Reversals.prototype.analyze = function(dataPoint) {
-    var put = false;
-    var call = false;
+    var put = true;
+    var call = true;
 
     var dataPoint = this.runStudies(dataPoint);
 
@@ -220,14 +220,14 @@ Reversals.prototype.analyze = function(dataPoint) {
     }
 
     if (this.configuration.trendPrChannel) {
-        if (previousdataPoint && dataPoint.trendPrChannel && previousdataPoint.trendPrChannel) {
+        if (this.previousDataPoint && dataPoint.trendPrChannel && this.previousDataPoint.trendPrChannel) {
             // Determine if a long-term downtrend is not occurring.
-            if (put && dataPoint.trendPrChannel > previousdataPoint.trendPrChannel) {
+            if (put && dataPoint.trendPrChannel > this.previousDataPoint.trendPrChannel) {
                 put = false;
             }
 
             // Determine if a long-term uptrend is not occurring.
-            if (call && dataPoint.trendPrChannel < previousdataPoint.trendPrChannel) {
+            if (call && dataPoint.trendPrChannel < this.previousDataPoint.trendPrChannel) {
                 call = false;
             }
         }
@@ -238,19 +238,17 @@ Reversals.prototype.analyze = function(dataPoint) {
     }
 
     // Determine if there is a significant gap (> 60 seconds) between the current timestamp and the previous timestamp.
-    if ((put || call) && (!previousdataPoint || (dataPoint.timestamp - previousdataPoint.timestamp) !== 60 * 1000)) {
+    if ((put || call) && (!this.previousDataPoint || (dataPoint.timestamp - this.previousDataPoint.timestamp) !== 60 * 1000)) {
         put = false;
         call = false;
     }
 
-    this.previousdataPoint = dataPoint;
+    this.previousDataPoint = dataPoint;
 
     if (put) {
-        console.log('PUT');
         return 'PUT';
     }
     else if (call) {
-        console.log('CALL');
         return 'CALL';
     }
 

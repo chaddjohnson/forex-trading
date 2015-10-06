@@ -54,9 +54,6 @@ var server = ws.createServer(options, function(client) {
                 // Analyze the latest minute ticks.
                 analysisResult = strategy.analyze(summarizeData(tickDataPoints));
 
-                // Reset the tick points.
-                tickDataPoints = [];
-
                 // If analysis sends back a positive result, then initiate a trade.
                 if (analysisResult) {
                     client.sendText(JSON.stringify({
@@ -65,6 +62,9 @@ var server = ws.createServer(options, function(client) {
                         direction: analysisResult
                     }));
                 }
+
+                // Reset the tick points.
+                tickDataPoints = [tickDataPoint];
             }
         }
         catch (error) {
@@ -80,6 +80,7 @@ function summarizeData(dataPoints) {
         high: _(dataPoints).max('price').price,
         low: _(dataPoints).min('price').price,
         open: _(dataPoints).first().price,
-        close: _(dataPoints).last().price
+        close: _(dataPoints).last().price,
+        timestamp: _(dataPoints).last().timestamp
     };
 }
