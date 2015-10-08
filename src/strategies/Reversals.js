@@ -7,7 +7,7 @@ function Reversals(configuration) {
 
     this.configuration = configuration;
 
-    this.prepareStudies(this.buildStudyDefinitions(configuration));
+    this.prepareStudies(this.buildStudyDefinitions());
 }
 
 Reversals.prototype = Object.create(Base.prototype);
