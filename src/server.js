@@ -8,7 +8,7 @@ var options = {
     // secure: true,
     // key: fs.readFileSync('../../server.key'),
     // cert: fs.readFileSync('../../server.crt')
-}
+};
 var server = ws.createServer(options, function(client) {
     var tickDataPoints = [];
     var strategyConfiguration = {
