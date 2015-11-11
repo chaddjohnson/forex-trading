@@ -15,7 +15,7 @@ Base.prototype.getBrowser = function() {
     return this.browser;
 };
 
-Base.prototype.gotoNextStep = function(delay) {
+Base.prototype.runNextStep = function(delay) {
     var self = this;
 
     // Set default delay.
@@ -56,10 +56,8 @@ Base.prototype.run = function() {
                 console.log(message);
             };
 
-            page.injectJs('./src/client/utilities.js');
-            page.includeJs('https://code.jquery.com/jquery-2.1.4.min.js', function() {
-                self.gotoNextStep();
-            });
+            // Run the first step.
+            self.runNextStep();
         });
     });
 };
