@@ -19,7 +19,7 @@ Base.prototype.runNextStep = function(delay) {
     var self = this;
 
     // Set default delay.
-    delay = delay || 250;
+    delay = delay || 500;
 
     // Increment steps.
     self.stepIndex++;
