@@ -24,19 +24,19 @@ Base.prototype.gotoNextStep = function(delay) {
     // Increment steps.
     self.stepIndex++;
 
-    if (typeof self.steps[self.stepIndex] === 'function') {
-        // Wait to execute the next step.
-        setTimeout(function() {
+    // Wait to execute the next step.
+    setTimeout(function() {
+        if (typeof self.steps[self.stepIndex] === 'function') {
             // Execute the next step.
             self.steps[self.stepIndex]();
-        }, delay);
-    }
-    else {
-        console.log('Complete');
+        }
+        else {
+            console.log('Complete');
 
-        // Done.
-        browser.exit();
-    }
+            // Done.
+            self.browser.exit();
+        }
+    }, delay);
 };
 
 Base.prototype.run = function() {
@@ -49,14 +49,17 @@ Base.prototype.run = function() {
     phantom.create(phantomOptions, function(error, browser) {
         self.browser = browser;
 
-        browser.createPage(function(error, page) {
+        self.browser.createPage(function(error, page) {
             self.page = page;
 
             page.onConsoleMessage = function(message) {
                 console.log(message);
             };
 
-            self.gotoNextStep();
+            page.injectJs('./src/client/utilities.js');
+            page.includeJs('https://code.jquery.com/jquery-2.1.4.min.js', function() {
+                self.gotoNextStep();
+            });
         });
     });
 };

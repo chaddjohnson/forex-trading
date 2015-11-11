@@ -13,16 +13,13 @@ function CTOption() {
             page.open('http://localhost:8000/page1.html', function(error, status) {
                 console.log('Logging in...');
 
-                page.injectJs('./src/client/utilities.js');
-                page.includeJs('https://code.jquery.com/jquery-2.1.4.min.js', function() {
-                    page.evaluate(function() {
-                        $('#username').val('user@test.com');
-                        $('#password').val('P@ssw0rd');
-                        $('#loginForm').submit();
-                    });
-
-                    self.gotoNextStep();
+                page.evaluate(function() {
+                    $('#username').val('user@test.com');
+                    $('#password').val('P@ssw0rd');
+                    $('#loginForm').submit();
                 });
+
+                self.gotoNextStep();
             });
         },
         function() {
@@ -30,14 +27,11 @@ function CTOption() {
 
             console.log('Clicking link...');
 
-            page.injectJs('./src/client/utilities.js');
-            page.includeJs('https://code.jquery.com/jquery-2.1.4.min.js', function() {
-                page.evaluate(function() {
-                    document.getElementById('someLink').click();
-                });
-
-                self.gotoNextStep();
+            page.evaluate(function() {
+                document.getElementById('someLink').click();
             });
+
+            self.gotoNextStep();
         },
         function() {
             var page = self.getPage();
@@ -48,7 +42,7 @@ function CTOption() {
                 console.log(document.body.innerHTML);
             });
 
-            //self.gotoNextStep();
+            self.gotoNextStep();
         }
     ];
 
