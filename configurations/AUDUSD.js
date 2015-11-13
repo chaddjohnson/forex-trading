@@ -238,5 +238,63 @@ module.exports = {
         }
     ],
 
-    studies: []
+    studies: [
+        {
+            study: studies.Ema,
+            inputs: {
+                length: 200
+            },
+            outputMap: {
+                ema: 'ema200'
+            }
+        },{
+            study: studies.Ema,
+            inputs: {
+                length: 100
+            },
+            outputMap: {
+                ema: 'ema100'
+            }
+        },{
+            study: studies.Ema,
+            inputs: {
+                length: 50
+            },
+            outputMap: {
+                ema: 'ema50'
+            }
+        },{
+            study: studies.Sma,
+            inputs: {
+                length: 13
+            },
+            outputMap: {
+                sma: 'sma13'
+            }
+        },{
+            study: studies.Rsi,
+            inputs: {
+                length: 2
+            },
+            outputMap: {
+                rsi: 'rsi2'
+            }
+        },{
+            study: studies.Rsi,
+            inputs: {
+                length: 5
+            },
+            outputMap: {
+                rsi: 'rsi5'
+            }
+        },{
+            study: studies.Rsi,
+            inputs: {
+                length: 7
+            },
+            outputMap: {
+                rsi: 'rsi7'
+            }
+        }
+    ]
 };
