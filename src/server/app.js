@@ -1,3 +1,4 @@
+var fs = require('fs');
 var _ = require('underscore');
 var ws = require('nodejs-websocket');
 var strategies = require('../lib/strategies');
@@ -59,8 +60,18 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                                 });
                             }
 
+                            // Log data to a file.
+                            fs.appendFileSync('./data.csv', JSON.stringify({
+                                symbol: quote.symbol,
+                                price: lastDataPoints[quote.symbol].close,
+                                timestamp: quote.timestamp - (quoteDate.getSeconds() * 1000)
+                            }));
+
                             // Track the quote data by symbol.
                             symbolQuotes.push(quote);
+
+                            // Log data to a file.
+                            fs.appendFileSync('./data.csv', JSON.stringify(quote));
                         }
                     });
 
@@ -93,6 +104,13 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                 price: lastDataPoints[symbol].close,
                 timestamp: firstQuoteTimestamp
             });
+
+            // Log data to a file.
+            fs.appendFileSync('./data.csv', JSON.stringify({
+                symbol: symbol,
+                price: lastDataPoints[symbol].close,
+                timestamp: firstQuoteTimestamp
+            }));
         }
 
         // Nothing can be done if there still are no quotes.
@@ -131,6 +149,9 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                     // No data point available, so no analysis can take place.
                     return;
                 }
+
+                // Log data to a file.
+                fs.appendFileSync('./data.csv', '\n' + JSON.stringify(dataPoint) + '\n');
 
                 // Analyze the data to date.
                 analysis = symbolStrategies[symbol].analyze(dataPoint);
