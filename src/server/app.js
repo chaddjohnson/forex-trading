@@ -132,8 +132,6 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                     return;
                 }
 
-                dataPoints.push(dataPoint);
-
                 // Analyze the data to date.
                 analysis = strategy.analyze(dataPoint);
 
