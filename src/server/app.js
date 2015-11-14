@@ -58,20 +58,20 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                                     price: lastDataPoints[quote.symbol].close,
                                     timestamp: quote.timestamp - (quoteDate.getSeconds() * 1000)
                                 });
-                            }
 
-                            // Log data to a file.
-                            fs.appendFileSync('./data.csv', JSON.stringify({
-                                symbol: quote.symbol,
-                                price: lastDataPoints[quote.symbol].close,
-                                timestamp: quote.timestamp - (quoteDate.getSeconds() * 1000)
-                            }));
+                                // Log data to a file.
+                                fs.appendFileSync('./data.csv', JSON.stringify({
+                                    symbol: quote.symbol,
+                                    price: lastDataPoints[quote.symbol].close,
+                                    timestamp: quote.timestamp - (quoteDate.getSeconds() * 1000)
+                                }) + '\n');
+                            }
 
                             // Track the quote data by symbol.
                             symbolQuotes.push(quote);
 
                             // Log data to a file.
-                            fs.appendFileSync('./data.csv', JSON.stringify(quote));
+                            fs.appendFileSync('./data.csv', JSON.stringify(quote) + '\n');
                         }
                     });
 
@@ -110,7 +110,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                 symbol: symbol,
                 price: lastDataPoints[symbol].close,
                 timestamp: firstQuoteTimestamp
-            }));
+            }) + '\n');
         }
 
         // Nothing can be done if there still are no quotes.
@@ -151,7 +151,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                 }
 
                 // Log data to a file.
-                fs.appendFileSync('./data.csv', '\n' + JSON.stringify(dataPoint) + '\n');
+                fs.appendFileSync('./data.csv', JSON.stringify(dataPoint) + '\n');
 
                 // Analyze the data to date.
                 analysis = symbolStrategies[symbol].analyze(dataPoint);
