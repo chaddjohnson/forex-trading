@@ -56,8 +56,6 @@ CTOption.prototype.piggybackDataFeed = function() {
                 if (quotes.length > 0) {
                     // Translate the quote data into a format the trading service expects.
                     tradingMessage.data = quotes.map(function(quote) {
-                        console.log('QUOTE', quote.Symbol, parseFloat(quote.Price), parseInt(quote.TickTime + '000'));
-
                         return {
                             symbol: quote.Symbol,
                             price: parseFloat(quote.Price),

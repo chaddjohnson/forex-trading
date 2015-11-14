@@ -80,7 +80,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         var symbolQuotes = quotes[symbol];
         var firstQuoteTimestamp;
         var dataPoint = null;
-        var dataPointTimestamp = new Date();
+        var dataPointTimestamp = new Date().getTime();
 
         if (lastDataPoints[symbol]) {
             firstQuoteTimestamp = lastDataPoints[symbol].timestamp + (60 * 1000);
