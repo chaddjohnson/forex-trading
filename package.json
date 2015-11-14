@@ -1,8 +1,9 @@
 {
   "name": "forex-trading",
   "dependencies": {
-    "gulp": "^3.9.0",
-    "node-phantom-simple": "^2.1.1"
+    "nodejs-websocket": "^1.4.0",
+    "regression": "^1.2.1",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {}
 }

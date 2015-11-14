@@ -3,7 +3,6 @@ var ws = require('nodejs-websocket');
 var strategies = require('../lib/strategies');
 
 var port = 8080;
-var data = [];
 
 var messageTypes = {
     QUOTE: 1,
@@ -11,7 +10,9 @@ var messageTypes = {
     PUT: 3
 };
 
+var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD'];
 var investment = 5;
+var strategyFn = strategies.Reversals;
 
 var serverOptions = {
     // secure: true,
@@ -21,6 +22,7 @@ var serverOptions = {
 var serverOptions = ws.createServer(options, function(client) {
     var tickDataPoints = [];
     var strategies = {};
+    var quotes = {};
 
     console.log('New connection');
 
@@ -39,31 +41,9 @@ var serverOptions = ws.createServer(options, function(client) {
             switch (message.type) {
                 case messageTypes.QUOTE:
                     message.data.forEach(function(quote) {
-                        var configuration;
-                        var analysis = '';
-
-                        // Determine if a strategy instance exists to handle the symbol.
-                        if (!strategies[quote.symbol]) {
-                            configuration = require('../../configurations/' + quote.symbol + '.js');
-
-                            // Instantiate a new strategy.
-                            strategies[quote.symbol] = new strategies.Reversals(quote.symbol, configuration);
-                        }
-
-                        if (second === 59) {
-                            // Analyze the latest minute ticks.
-                            analysis = strategy.analyze(calculateMinuteData(...));
-
-                            // If analysis sends back a positive result, then initiate a trade.
-                            if (analysis) {
-                                client.sendText(JSON.stringify({
-                                    type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
-                                    data: {
-                                        symbol: quote.symbol,
-                                        investment: investment
-                                    }
-                                }));
-                            }
+                        if (symbols.indexOf(quote.symbol) > -1) {
+                            // Track data by symbol.
+                            quotes[quote.symbol].push(quote);
                         }
                     });
 
@@ -75,27 +55,65 @@ var serverOptions = ws.createServer(options, function(client) {
         }
     });
 
+    function calculateMinuteData(symbol) {
+        var symbolQuotes = quotes[symbol];
+
+        var dataPoint = {
+           high: _(symbolQuotes).max('price').price,
+           low: _(symbolQuotes).min('price').price,
+           open: _(symbolQuotes).first().price,
+           close: _(symbolQuotes).last().price,
+           timestamp: _(symbolQuotes).last().timestamp
+        };
+
+        // Clear out old data.
+        //quotes[symbol] = [];
+
+        return dataPoint;
+    }
+
     function tickTimer() {
         var date = new Date();
         var drift = date.getMilliseconds();
+        var second = date.getSeconds();
+        var analysis = '';
+        var dataPoint;
 
-        // ...
+        // Enter trades only on the 59th second.
+        if (second === 59) {
+            // Perform analysis for each symbol.
+            symbols.forEach(function(symbol) {
+                dataPoint = calculateMinuteData(symbol);
+
+                // Analyze the data to date.
+                analysis = strategy.analyze(dataPoint);
+
+                // If analysis sends back a positive result, then tell the client to initiate a trade.
+                if (analysis) {
+                    client.sendText(JSON.stringify({
+                        type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
+                        data: {
+                            symbol: symbol,
+                            investment: investment
+                        }
+                    }));
+                }
+            });
+        }
 
         setTimeout(tickTimer, 1000 - drift);
     }
 
+    symbols.forEach(function(symbol) {
+        var settings = require('../../settings/' + symbol + '.js');
+
+        // Instantiate a new strategy instance for the symbol.
+        strategies[symbol] = new strategyFn(symbol, settings);
+
+        // Initialize quote data for the symbol.
+        quotes[symbol] = [];
+    });
+
+    // Start the timer.
     tickTimer();
 }).listen(port);
-
-function calculateMinuteData(quotes) {
-    return {
-       high: _(quotes).max('price').price,
-       low: _(quotes).min('price').price,
-       open: _(quotes).first().price,
-       close: _(quotes).last().price,
-       timestamp: _(quotes).last().timestamp
-    };
-
-    The backtesting data is only minute data, so just use that for testing purposes.
-    return dataPoint;
-}

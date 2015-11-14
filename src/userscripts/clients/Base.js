@@ -74,6 +74,10 @@ Base.prototype.put = function(symbol, investment) {
     throw 'put() not implemented';
 };
 
+Base.prototype.payoutIsHighEnough = function(symbol) {
+    throw 'payoutIsHighEnough() not implemented';
+};
+
 Base.prototype.setTradeInvestment = function(symbol, investment) {
     throw 'setTradeInvestment() not implemented';
 };

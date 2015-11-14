@@ -107,6 +107,11 @@ CTOption.prototype.call = function(symbol, investment) {
         console.error('No investment provided');
     }
 
+    // Verify payout is high enough to trade.
+    if (!this.payoutIsHighEnough(symbol)) {
+        return;
+    }
+
     // Ensure UI for symbol is present.
     if ($('#assetID_10_' + symbol).length === 0) {
         return;
@@ -134,6 +139,11 @@ CTOption.prototype.put = function(symbol, investment) {
         console.error('No investment provided');
     }
 
+    // Verify payout is high enough to trade.
+    if (!this.payoutIsHighEnough(symbol)) {
+        return;
+    }
+
     // Ensure UI for symbol is present.
     if ($('#assetID_10_' + symbol).length === 0) {
         return;
@@ -150,6 +160,10 @@ CTOption.prototype.put = function(symbol, investment) {
 
     // Initiate trade.
     this.initiateTrade(symbol);
+};
+
+CTOption.prototype.payoutIsHighEnough = function(symbol) {
+    return parseInt($('#assetID_10_' + symbol + ' .box_header li').get(2).innerText) >= 70;
 };
 
 CTOption.prototype.setTradeInvestment = function(symbol, investment) {

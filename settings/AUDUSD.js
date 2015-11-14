@@ -1,7 +1,7 @@
 var studies = require('./src/lib/studies');
 
 module.exports = {
-    combinations: [
+    configurations: [
         {
             "trendPrChannel": {
                 "regression": "trendPrChannel550_2"
@@ -237,7 +237,6 @@ module.exports = {
             "ema200": false
         }
     ],
-
     studies: [
         {
             study: studies.Ema,
