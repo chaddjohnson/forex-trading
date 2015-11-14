@@ -35,10 +35,11 @@ the userscript will automatically run.
 
 ### Usage
 
-1. Open a terminal and go to the directory where you cloned this repository.
-2. Run the web socket service: `node src/server/app`.
-3. Open Google Chrome and visit https://ctoption.com/.
-4. In the address bar, on the right side, you will likely see a gray shield icon. Click this, and a menu
+1. Sign into your CTOption trading account.
+2. Open a terminal and go to the directory where you cloned this repository.
+3. Run the web socket service: `node src/server/app`.
+4. Open Google Chrome and visit https://ctoption.com/.
+5. In the address bar, on the right side, you will likely see a gray shield icon. Click this, and a menu
 will appear. In this menu, click the "Load unsafe scripts" button. This should cause the web page to reload.
 
 Five seconds after the web page reloads, you should see "New connection" display in the terminal window.
