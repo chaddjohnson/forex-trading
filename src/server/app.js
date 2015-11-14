@@ -10,7 +10,7 @@ var messageTypes = {
     PUT: 3
 };
 
-var symbols = ['EURGBP-OTC', 'AUDNZD-OTC', 'NZDUSD-OTC', 'AUDCAD-OTC', 'USDJPY-OTC', 'AUDUSD-OTC', 'USDCAD-OTC', 'USDCHF-OTC', 'EURUSD-OTC'];
+var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD'];
 var investment = 5;
 var strategyFn = strategies.Reversals;
 
@@ -153,7 +153,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
     }
 
     symbols.forEach(function(symbol) {
-        var settings = require('../../settings/' + symbol.replace('-OTC', '') + '.js');
+        var settings = require('../../settings/' + symbol + '.js');
 
         // Instantiate a new strategy instance for the symbol.
         symbolStrategies[symbol] = new strategyFn(symbol, settings);
