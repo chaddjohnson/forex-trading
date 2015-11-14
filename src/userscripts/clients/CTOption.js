@@ -3,13 +3,14 @@ var Base = require('./Base');
 function CTOption() {
     this.constructor = CTOption;
 
+    var self = this;
     var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD'];
 
-    Base.call(this, symbols);
+    Base.call(self, symbols);
 
     // Show controls for all symbols.
     symbols.forEach(function(symbol) {
-        showSymbolControls(symbol);
+        self.showSymbolControls(symbol);
     });
 }
 
