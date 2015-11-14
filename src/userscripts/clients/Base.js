@@ -44,11 +44,11 @@ Base.prototype.initializeTradingSocket = function() {
 
             switch (message.type) {
                 case tradingMessageTypes.CALL:
-                    self.call(message.data.symbol, message.data.investment);
+                    self.callTrade(message.data.symbol, message.data.investment);
                     break;
 
                 case tradingMessageTypes.PUT:
-                    self.put(message.data.symbol, message.data.investment);
+                    self.putTrade(message.data.symbol, message.data.investment);
                     break;
             }
         }
@@ -66,12 +66,12 @@ Base.prototype.showSymbolControls = function() {
     throw 'showSymbolControls() not implemented';
 };
 
-Base.prototype.call = function(symbol, investment) {
-    throw 'call() not implemented';
+Base.prototype.callTrade = function(symbol, investment) {
+    throw 'callTrade() not implemented';
 };
 
-Base.prototype.put = function(symbol, investment) {
-    throw 'put() not implemented';
+Base.prototype.putTrade = function(symbol, investment) {
+    throw 'putTrade() not implemented';
 };
 
 Base.prototype.payoutIsHighEnough = function(symbol) {

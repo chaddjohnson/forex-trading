@@ -102,7 +102,7 @@ CTOption.prototype.showSymbolControls = function(symbol) {
     $('#assetID_10_' + symbol + ' .box_header').click();
 };
 
-CTOption.prototype.call = function(symbol, investment) {
+CTOption.prototype.callTrade = function(symbol, investment) {
     // Ensure necessary parameters are present.
     if (!symbol) {
         console.error('No symbol provided');
@@ -134,7 +134,7 @@ CTOption.prototype.call = function(symbol, investment) {
     this.initiateTrade(symbol);
 };
 
-CTOption.prototype.put = function(symbol, investment) {
+CTOption.prototype.putTrade = function(symbol, investment) {
     // Ensure necessary parameters are present.
     if (!symbol) {
         console.error('No symbol provided');
