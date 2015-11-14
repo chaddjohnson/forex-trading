@@ -77,11 +77,11 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         var firstQuoteTimestamp;
         var dataPoint = null;
 
+        firstQuoteTimestamp = lastDataPoints[symbol].timestamp + (60 * 1000);
+        firstQuoteTimestamp = firstQuoteTimestamp - (new Date(firstQuoteDate).getSeconds() * 1000);
+
         // If there are no quotes for the minute, then create one using the previous data point.
         if (symbolQuotes.length === 0 && lastDataPoints[symbol]) {
-            firstQuoteTimestamp = lastDataPoints[symbol].timestamp + (60 * 1000);
-            firstQuoteTimestamp = firstQuoteTimestamp - (new Date(firstQuoteDate).getSeconds() * 1000);
-
             symbolQuotes.push({
                 symbol: symbol,
                 price: lastDataPoints[symbol].close,
@@ -94,7 +94,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
             low: _(symbolQuotes).min('price').price,
             open: _(symbolQuotes).first().price,
             close: _(symbolQuotes).last().price,
-            timestamp: new Date().getTime()
+            timestamp: firstQuoteTimestamp + (59 * 1000)
         };
 
         quotes[symbol] = [];
