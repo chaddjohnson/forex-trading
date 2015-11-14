@@ -4,7 +4,7 @@ function CTOption() {
     this.constructor = CTOption;
 
     var self = this;
-    var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD'];
+    var symbols = ['EURGBP-OTC', 'AUDNZD-OTC', 'NZDUSD-OTC', 'AUDCAD-OTC', 'USDJPY-OTC', 'AUDUSD-OTC', 'USDCAD-OTC', 'USDCHF-OTC', 'EURUSD-OTC'];
 
     Base.call(self, symbols);
 
@@ -56,13 +56,12 @@ CTOption.prototype.piggybackDataFeed = function() {
                 if (quotes.length > 0) {
                     // Translate the quote data into a format the trading service expects.
                     tradingMessage.data = quotes.map(function(quote) {
+                        console.log('QUOTE', quote.Symbol, parseFloat(quote.Price), parseInt(quote.TickTime + '000'));
+
                         return {
-                            type: tradingMessageTypes.QUOTE,
-                            data: {
-                                symbol: quote.Symbol,
-                                price: parseFloat(quote.Price),
-                                timestamp: parseInt(quote.TickTime + '000')
-                            }
+                            symbol: quote.Symbol,
+                            price: parseFloat(quote.Price),
+                            timestamp: parseInt(quote.TickTime + '000')
                         };
                     });
 

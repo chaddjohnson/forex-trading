@@ -10,7 +10,7 @@ var messageTypes = {
     PUT: 3
 };
 
-var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD'];
+var symbols = ['EURGBP-OTC', 'AUDNZD-OTC', 'NZDUSD-OTC', 'AUDCAD-OTC', 'USDJPY-OTC', 'AUDUSD-OTC', 'USDCAD-OTC', 'USDCHF-OTC', 'EURUSD-OTC'];
 var investment = 5;
 var strategyFn = strategies.Reversals;
 
@@ -20,7 +20,7 @@ var serverOptions = {
     // cert: fs.readFileSync('../../server.crt')
 };
 var serverOptions = ws.createServer(serverOptions, function(client) {
-    var strategies = {};
+    var symbolStrategies = {};
     var quotes = {};
     var lastDataPoints = {};
 
@@ -57,10 +57,14 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                                     price: lastDataPoints[quote.symbol].close,
                                     timestamp: quote.timestamp - (quoteDate.getSeconds() * 1000)
                                 });
+
+                                console.log('QUOTE', quote.symbol, lastDataPoints[quote.symbol].close, quote.timestamp - (quoteDate.getSeconds() * 1000));
                             }
 
                             // Track the quote data by symbol.
                             symbolQuotes.push(quote);
+
+                            console.log('QUOTE', quote.symbol, quote.price, quote.timestamp);
                         }
                     });
 
@@ -80,7 +84,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
 
         if (lastDataPoints[symbol]) {
             firstQuoteTimestamp = lastDataPoints[symbol].timestamp + (60 * 1000);
-            firstQuoteTimestamp = firstQuoteTimestamp - (new Date(firstQuoteDate).getSeconds() * 1000);
+            firstQuoteTimestamp = firstQuoteTimestamp - (new Date(firstQuoteTimestamp).getSeconds() * 1000);
 
             // Use the first second of the minute for the data point timestamp.
             dataPointTimestamp = firstQuoteTimestamp + (59 * 1000);
@@ -93,6 +97,8 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                 price: lastDataPoints[symbol].close,
                 timestamp: firstQuoteTimestamp
             });
+
+            console.log('QUOTE', symbol, lastDataPoints[symbol].close, firstQuoteTimestamp);
         }
 
         // Nothing can be done if there still are no quotes.
@@ -132,8 +138,12 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                     return;
                 }
 
+                console.log();
+                console.log('DATA POINT', dataPoint.high, dataPoint.low, dataPoint.open, dataPoint.close, dataPoint.timestamp);
+                console.log();
+
                 // Analyze the data to date.
-                analysis = strategy.analyze(dataPoint);
+                analysis = symbolStrategies[symbol].analyze(dataPoint);
 
                 // If analysis sends back a positive result, then tell the client to initiate a trade.
                 if (analysis) {
@@ -153,10 +163,10 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
     }
 
     symbols.forEach(function(symbol) {
-        var settings = require('../../settings/' + symbol + '.js');
+        var settings = require('../../settings/' + symbol.replace('-OTC', '') + '.js');
 
         // Instantiate a new strategy instance for the symbol.
-        strategies[symbol] = new strategyFn(symbol, settings);
+        symbolStrategies[symbol] = new strategyFn(symbol, settings);
 
         // Initialize quote data for the symbol.
         quotes[symbol] = [];
