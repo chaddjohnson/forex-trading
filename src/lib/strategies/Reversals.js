@@ -12,6 +12,8 @@ Reversals.prototype = Object.create(Base.prototype);
 Reversals.prototype.analyze = function(dataPoint) {
     var self = this;
     var hour = new Date().getHours();
+    var put = false;
+    var call = false;
     var putThisConfiguration = false;
     var callThisConfiguration = false;
 
@@ -24,9 +26,6 @@ Reversals.prototype.analyze = function(dataPoint) {
         self.previousDataPoint = dataPoint;
         return;
     }
-
-    put = false;
-    call = false;
 
     // For every configuration...
     self.getSettings().configurations.forEach(function(configuration) {
