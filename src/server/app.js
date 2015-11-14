@@ -20,9 +20,9 @@ var serverOptions = {
     // cert: fs.readFileSync('../../server.crt')
 };
 var serverOptions = ws.createServer(options, function(client) {
-    var tickDataPoints = [];
     var strategies = {};
     var quotes = {};
+    var lastDataPoints = {};
 
     console.log('New connection');
 
@@ -37,13 +37,30 @@ var serverOptions = ws.createServer(options, function(client) {
     client.on('text', function(data) {
         try {
             var message = JSON.parse(data);
+            var quoteDate;
 
             switch (message.type) {
                 case messageTypes.QUOTE:
                     message.data.forEach(function(quote) {
+                        var symbolQuotes = quotes[quote.symbol];
+
+                        // Only record the data if the data pertains to a symbol being monitored.
                         if (symbols.indexOf(quote.symbol) > -1) {
-                            // Track data by symbol.
-                            quotes[quote.symbol].push(quote);
+                            quoteDate = new Date(quote.timestamp);
+
+                            // If the quote timestamp second is after second 0 and there is no data recorded
+                            // yet for the current minute, then use the previous data point's close price
+                            // as the open price for this minute.
+                            if (symbolQuotes.length === 0 && quoteDate.getSeconds() > 0 && lastDataPoints[quote.symbol]) {
+                                symbolQuotes.push({
+                                    symbol: quote.symbol,
+                                    price: lastDataPoints[quote.symbol].close
+                                    timestamp: quote.timestamp - (quoteDate.getSeconds() * 1000)
+                                });
+                            }
+
+                            // Track the quote data by symbol.
+                            symbolQuotes.push(quote.data);
                         }
                     });
 
@@ -57,17 +74,31 @@ var serverOptions = ws.createServer(options, function(client) {
 
     function calculateMinuteData(symbol) {
         var symbolQuotes = quotes[symbol];
+        var firstQuoteTimestamp;
+        var dataPoint = null;
 
-        var dataPoint = {
-           high: _(symbolQuotes).max('price').price,
-           low: _(symbolQuotes).min('price').price,
-           open: _(symbolQuotes).first().price,
-           close: _(symbolQuotes).last().price,
-           timestamp: _(symbolQuotes).last().timestamp
+        // If there are no quotes for the minute, then create one using the previous data point.
+        if (symbolQuotes.length === 0 && lastDataPoints[symbol]) {
+            firstQuoteTimestamp = lastDataPoints[symbol].timestamp + (60 * 1000);
+            firstQuoteTimestamp = firstQuoteTimestamp - (new Date(firstQuoteDate).getSeconds() * 1000);
+
+            symbolQuotes.push({
+                symbol: symbol,
+                price: lastDataPoints[symbol].close,
+                timestamp: firstQuoteTimestamp
+            });
+        }
+
+        dataPoint = {
+            high: _(symbolQuotes).max('price').price,
+            low: _(symbolQuotes).min('price').price,
+            open: _(symbolQuotes).first().price,
+            close: _(symbolQuotes).last().price,
+            timestamp: new Date().getTime()
         };
 
-        // Clear out old data.
-        //quotes[symbol] = [];
+        quotes[symbol] = [];
+        lastDataPoints[symbol] = dataPoint;
 
         return dataPoint;
     }
@@ -84,6 +115,7 @@ var serverOptions = ws.createServer(options, function(client) {
             // Perform analysis for each symbol.
             symbols.forEach(function(symbol) {
                 dataPoint = calculateMinuteData(symbol);
+                dataPoints.push(dataPoint);
 
                 // Analyze the data to date.
                 analysis = strategy.analyze(dataPoint);

@@ -55,10 +55,12 @@ CTOption.prototype.piggybackDataFeed = function() {
                     // Translate the quote data into a format the trading service expects.
                     tradingMessage.data = quotes.map(function(quote) {
                         return {
-                            type: tradingMessageTypes.QUOTE,
-                            symbol: quote.Symbol,
-                            price: parseFloat(quote.Price),
-                            timestamp: parseInt(quote.TickTime + '000')
+                            type: self.getTradingMessageTypes().QUOTE,
+                            data: {
+                                symbol: quote.Symbol,
+                                price: parseFloat(quote.Price),
+                                timestamp: parseInt(quote.TickTime + '000')
+                            }
                         };
                     });
 
@@ -118,7 +120,7 @@ CTOption.prototype.call = function(symbol, investment) {
     }
 
     // Ensure the controls are displayed.
-    showSymbolControls(symbol);
+    this.showSymbolControls(symbol);
 
     // Click the "CALL" button.
     $('#assetID_10_' + symbol + ' .call_btn').click();
@@ -150,7 +152,7 @@ CTOption.prototype.put = function(symbol, investment) {
     }
 
     // Ensure the controls are displayed.
-    showSymbolControls(symbol);
+    this.showSymbolControls(symbol);
 
     // Click the "CALL" button.
     $('#assetID_10_' + symbol + ' .put_btn').click();
