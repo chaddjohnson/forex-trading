@@ -19,7 +19,7 @@ var serverOptions = {
     // key: fs.readFileSync('../../server.key'),
     // cert: fs.readFileSync('../../server.crt')
 };
-var serverOptions = ws.createServer(options, function(client) {
+var serverOptions = ws.createServer(serverOptions, function(client) {
     var strategies = {};
     var quotes = {};
     var lastDataPoints = {};
@@ -54,7 +54,7 @@ var serverOptions = ws.createServer(options, function(client) {
                             if (symbolQuotes.length === 0 && quoteDate.getSeconds() > 0 && lastDataPoints[quote.symbol]) {
                                 symbolQuotes.push({
                                     symbol: quote.symbol,
-                                    price: lastDataPoints[quote.symbol].close
+                                    price: lastDataPoints[quote.symbol].close,
                                     timestamp: quote.timestamp - (quoteDate.getSeconds() * 1000)
                                 });
                             }
