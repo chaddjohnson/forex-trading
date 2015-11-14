@@ -60,7 +60,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                             }
 
                             // Track the quote data by symbol.
-                            symbolQuotes.push(quote.data);
+                            symbolQuotes.push(quote);
                         }
                     });
 
