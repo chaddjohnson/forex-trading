@@ -176,4 +176,6 @@ CTOption.prototype.initiateTrade = function(symbol) {
     $('#assetID_10_' + symbol + ' .apply_button').click();
 };
 
-module.exports = CTOption;
+window.setTimeout(function() {
+    var client = new CTOption();
+}, 5000);
