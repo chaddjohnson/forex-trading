@@ -57,14 +57,10 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                                     price: lastDataPoints[quote.symbol].close,
                                     timestamp: quote.timestamp - (quoteDate.getSeconds() * 1000)
                                 });
-
-                                console.log('QUOTE', quote.symbol, lastDataPoints[quote.symbol].close, quote.timestamp - (quoteDate.getSeconds() * 1000));
                             }
 
                             // Track the quote data by symbol.
                             symbolQuotes.push(quote);
-
-                            console.log('QUOTE', quote.symbol, quote.price, quote.timestamp);
                         }
                     });
 
@@ -97,8 +93,6 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                 price: lastDataPoints[symbol].close,
                 timestamp: firstQuoteTimestamp
             });
-
-            console.log('QUOTE', symbol, lastDataPoints[symbol].close, firstQuoteTimestamp);
         }
 
         // Nothing can be done if there still are no quotes.
@@ -137,10 +131,6 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                     // No data point available, so no analysis can take place.
                     return;
                 }
-
-                console.log();
-                console.log('DATA POINT', dataPoint.high, dataPoint.low, dataPoint.open, dataPoint.close, dataPoint.timestamp);
-                console.log();
 
                 // Analyze the data to date.
                 analysis = symbolStrategies[symbol].analyze(dataPoint);
