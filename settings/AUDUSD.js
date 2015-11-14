@@ -1,4 +1,4 @@
-var studies = require('./src/lib/studies');
+var studies = require('../src/lib/studies');
 
 module.exports = {
     configurations: [
