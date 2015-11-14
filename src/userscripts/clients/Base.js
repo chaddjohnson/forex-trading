@@ -4,7 +4,7 @@ function Base(symbols) {
     self.symbols = symbols;
 
     // Begin piggybacking on data feed.
-    piggybackDataFeed();
+    self.piggybackDataFeed();
 
     // Keep piggybacking active.
     window.setInterval(function() {
