@@ -41,8 +41,9 @@ CTOption.prototype.piggybackDataFeed = function() {
             var data = JSON.parse(event.data.replace('5:::', ''));
             var dataPoint;
             var quotes = [];
+            var tradingMessageTypes = self.getTradingMessageTypes();
             var tradingMessage = {
-                type: self.getTradingMessageTypes().QUOTE,
+                type: tradingMessageTypes.QUOTE,
                 data: []
             };
 
@@ -56,7 +57,7 @@ CTOption.prototype.piggybackDataFeed = function() {
                     // Translate the quote data into a format the trading service expects.
                     tradingMessage.data = quotes.map(function(quote) {
                         return {
-                            type: self.getTradingMessageTypes().QUOTE,
+                            type: tradingMessageTypes.QUOTE,
                             data: {
                                 symbol: quote.Symbol,
                                 price: parseFloat(quote.Price),
