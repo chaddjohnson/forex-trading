@@ -44,3 +44,6 @@ will appear. In this menu, click the "Load unsafe scripts" button. This should c
 
 Five seconds after the web page reloads, you should see "New connection" display in the terminal window.
 If you see this, the bot is running successfully!
+
+To change the investment dollar amount per trade, edit `src/server/app.js` and change the `investment` variable
+to a different value (e.g. 100 for $100 per trade).
