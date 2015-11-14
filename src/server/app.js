@@ -146,6 +146,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                             investment: investment
                         }
                     }));
+                    console.log(analysis + ' for ' + symbol + ' at ' + new Date() + ' for $' + investment);
                 }
             });
         }
