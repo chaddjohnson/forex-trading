@@ -76,9 +76,15 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         var symbolQuotes = quotes[symbol];
         var firstQuoteTimestamp;
         var dataPoint = null;
+        var dataPointTimestamp = new Date();
 
-        firstQuoteTimestamp = lastDataPoints[symbol].timestamp + (60 * 1000);
-        firstQuoteTimestamp = firstQuoteTimestamp - (new Date(firstQuoteDate).getSeconds() * 1000);
+        if (lastDataPoints[symbol]) {
+            firstQuoteTimestamp = lastDataPoints[symbol].timestamp + (60 * 1000);
+            firstQuoteTimestamp = firstQuoteTimestamp - (new Date(firstQuoteDate).getSeconds() * 1000);
+
+            // Use the first second of the minute for the data point timestamp.
+            dataPointTimestamp = firstQuoteTimestamp + (59 * 1000);
+        }
 
         // If there are no quotes for the minute, then create one using the previous data point.
         if (symbolQuotes.length === 0 && lastDataPoints[symbol]) {
@@ -89,12 +95,17 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
             });
         }
 
+        // Nothing can be done if there still are no quotes.
+        if (symbolQuotes.length === 0) {
+            return;
+        }
+
         dataPoint = {
             high: _(symbolQuotes).max('price').price,
             low: _(symbolQuotes).min('price').price,
             open: _(symbolQuotes).first().price,
             close: _(symbolQuotes).last().price,
-            timestamp: firstQuoteTimestamp + (59 * 1000)
+            timestamp: dataPointTimestamp
         };
 
         quotes[symbol] = [];
@@ -115,6 +126,12 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
             // Perform analysis for each symbol.
             symbols.forEach(function(symbol) {
                 dataPoint = calculateMinuteData(symbol);
+
+                if (!dataPoint) {
+                    // No data point available, so no analysis can take place.
+                    return;
+                }
+
                 dataPoints.push(dataPoint);
 
                 // Analyze the data to date.
