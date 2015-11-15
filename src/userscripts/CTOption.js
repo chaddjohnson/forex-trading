@@ -118,6 +118,8 @@ CTOption.prototype.callTrade = function(symbol, investment) {
         return;
     }
 
+    console.log('Attempting CALL for ' + symbol + ' at ' + new Date() + ' for $' + investment + '.');
+
     // Ensure the controls are displayed.
     this.showSymbolControls(symbol);
 
@@ -150,6 +152,8 @@ CTOption.prototype.putTrade = function(symbol, investment) {
         return;
     }
 
+    console.log('Attempting PUT for ' + symbol + ' at ' + new Date() + ' for $' + investment + '.');
+
     // Ensure the controls are displayed.
     this.showSymbolControls(symbol);
 
@@ -175,10 +179,14 @@ CTOption.prototype.setTradeInvestment = function(symbol, investment) {
 CTOption.prototype.initiateTrade = function(symbol) {
     $('#assetID_10_' + symbol + ' .apply_button').click();
 
+    console.log('Trade placed.');
+
     // Automatically log in again if necessary.
     window.setTimeout(function() {
         // Check whether the Login dialog is shown.
         if ($('#iPopUp').length > 0) {
+            console.log('Logged out. Logging in again...');
+
             // Fill in the form.
             $('#iPopUp').contents().find('#popuptxtUsername').val(localStorage.username);
             $('#iPopUp').contents().find('#popuptxtPassword').val(localStorage.password);
