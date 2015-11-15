@@ -33,7 +33,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
     });
 
     client.on('error', function(error) {
-        console.log(error);
+        console.error(error);
     });
 
     client.on('text', function(data) {
