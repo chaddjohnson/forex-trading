@@ -174,8 +174,31 @@ CTOption.prototype.setTradeInvestment = function(symbol, investment) {
 
 CTOption.prototype.initiateTrade = function(symbol) {
     $('#assetID_10_' + symbol + ' .apply_button').click();
+
+    // Automatically log in again if necessary.
+    window.setTimeout(function() {
+        // Check whether the Login dialog is shown.
+        if ($('#iPopUp').length > 0) {
+            // Fill in the form.
+            $('#iPopUp').contents().find('#popuptxtUsername').val(localStorage.username);
+            $('#iPopUp').contents().find('#popuptxtPassword').val(localStorage.password);
+
+            // Click the Login button.
+            $('#iPopUp').contents().find('#popupbtnformLogin').click();
+        }
+    }, 2000);
 };
 
 window.setTimeout(function() {
+    // Cache credentials so the bot can automatically log in again if logged out.
+    localStorage.username = localStorage.username || prompt('Please enter your username');
+    localStorage.password = localStorage.password || prompt('Please enter your password');
+
+    // When explicitly logging out, remove the cached credentials.
+    $('.btnLogout').on('click', function() {
+        delete localStorage.username;
+        delete localStorage.password;
+    });
+
     var client = new CTOption();
 }, 5000);

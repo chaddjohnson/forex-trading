@@ -4,16 +4,21 @@ var ws = require('nodejs-websocket');
 var strategies = require('../lib/strategies');
 
 var port = 8080;
-
 var messageTypes = {
     QUOTE: 1,
     CALL: 2,
     PUT: 3
 };
 
+// Settings
 var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD'];
 var investment = 5;
 var strategyFn = strategies.Reversals;
+
+// Data
+var symbolStrategies = {};
+var quotes = {};
+var lastDataPoints = {};
 
 var serverOptions = {
     // secure: true,
@@ -21,10 +26,6 @@ var serverOptions = {
     // cert: fs.readFileSync('../../server.crt')
 };
 var serverOptions = ws.createServer(serverOptions, function(client) {
-    var symbolStrategies = {};
-    var quotes = {};
-    var lastDataPoints = {};
-
     console.log('New connection');
 
     client.on('close', function(code, reason) {
@@ -173,16 +174,16 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         setTimeout(tickTimer, 1000 - drift);
     }
 
-    symbols.forEach(function(symbol) {
-        var settings = require('../../settings/' + symbol + '.js');
-
-        // Instantiate a new strategy instance for the symbol.
-        symbolStrategies[symbol] = new strategyFn(symbol, settings);
-
-        // Initialize quote data for the symbol.
-        quotes[symbol] = [];
-    });
-
     // Start the timer.
     tickTimer();
 }).listen(port);
+
+symbols.forEach(function(symbol) {
+    var settings = require('../../settings/' + symbol + '.js');
+
+    // Instantiate a new strategy instance for the symbol.
+    symbolStrategies[symbol] = new strategyFn(symbol, settings);
+
+    // Initialize quote data for the symbol.
+    quotes[symbol] = [];
+});
