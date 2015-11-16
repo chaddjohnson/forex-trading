@@ -194,19 +194,45 @@ CTOption.prototype.initiateTrade = function(symbol) {
             // Click the Login button.
             $('#iPopUp').contents().find('#popupbtnformLogin').click();
         }
-    }, 2000);
+    }, 2 * 1000);
 };
 
 window.setTimeout(function() {
+    var client;
+
     // Cache credentials so the bot can automatically log in again if logged out.
     localStorage.username = localStorage.username || prompt('Please enter your username');
     localStorage.password = localStorage.password || prompt('Please enter your password');
 
-    // When explicitly logging out, remove the cached credentials.
-    $('.btnLogout').on('click', function() {
-        delete localStorage.username;
-        delete localStorage.password;
-    });
+    // Log in automatically if not logged in.
+    if ($('.usernameval').length === 0) {
+        $('#txtUsername').val(localStorage.username);
+        $('#txtPassword').val(localStorage.password);
+        $('#btnformLogin').click();
+    }
+    else if (localStorage.signOutOnLoad) {
+        // Remove the flag.
+        delete localStorage.signOutOnLoad;
 
-    var client = new CTOption();
-}, 5000);
+        // Initiate logout.
+        $('.btnLogout').click();
+    }
+    else {
+        client = new CTOption();
+    }
+}, 5 * 1000);
+
+// Re-authenticate every two hours.
+window.setTimeout(function() {
+    var tempWindow;
+
+    // Set a flag instructing the new window to automatically sign out on load.
+    localStorage.signOutOnLoad = 'true';
+
+    tempWindow = window.open('https://ctoption.com');
+
+    // Close the temporary window after a bit.
+    window.setTimeout(function() {
+        tempWindow.close();
+    }, 30 * 1000)
+}, 2 * 60 * 60 * 1000);
