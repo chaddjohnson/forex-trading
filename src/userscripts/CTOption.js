@@ -107,6 +107,10 @@ CTOption.prototype.callTrade = function(symbol, investment) {
     if (!investment) {
         console.error('No investment provided');
     }
+    if (localStorage.reauthenticating) {
+        console.log('Reauthentication in progress; trade aborted');
+        return;
+    }
 
     // Verify payout is high enough to trade.
     if (!this.payoutIsHighEnough(symbol)) {
@@ -140,6 +144,10 @@ CTOption.prototype.putTrade = function(symbol, investment) {
     }
     if (!investment) {
         console.error('No investment provided');
+    }
+    if (localStorage.reauthenticating) {
+        console.log('Reauthentication in progress; trade aborted');
+        return;
     }
 
     // Verify payout is high enough to trade.
@@ -218,6 +226,9 @@ window.setTimeout(function() {
         $('.btnLogout').click();
     }
     else {
+        // Remove flag since reauthentication is done.
+        delete localStorage.reauthenticating;
+
         // Select the 5-minute "Hyper" tab.
         $('#bnmain .tabs .tab')[3].click();
         $('#bnmain .hyperfilter li')[3].click()
@@ -232,6 +243,9 @@ window.setTimeout(function() {
 
     // Set a flag instructing the new window to automatically sign out on load.
     localStorage.signOutOnLoad = 'true';
+
+    // Set a flag designating that reauthentication is taking place.
+    localStorage.reauthenticating = 'true';
 
     tempWindow = window.open('https://ctoption.com');
 
