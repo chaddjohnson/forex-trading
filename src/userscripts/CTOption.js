@@ -249,8 +249,9 @@ window.setTimeout(function() {
 
     tempWindow = window.open('https://ctoption.com');
 
-    // Close the temporary window after a bit.
+    // Close the temporary window after a bit and reload the current page.
     window.setTimeout(function() {
         tempWindow.close();
+        window.location.reload();
     }, 30 * 1000)
 }, 2 * 60 * 60 * 1000);
