@@ -39,7 +39,7 @@ CTOption.prototype.piggybackDataFeed = function() {
     var originalOnError = dataSocket.onerror;
 
     dataSocket.onopen = function() {
-        console.log('Data socket opened');
+        console.log(new Date() + ' Data socket opened');
         originalOnOpen();
     };
 
@@ -76,7 +76,7 @@ CTOption.prototype.piggybackDataFeed = function() {
             }
         }
         catch (error) {
-            //console.error('DATA ERROR: ' + (error.message || error), event.data);
+            //console.error(new Date() + ' DATA ERROR: ' + (error.message || error), event.data);
         }
 
         // Call the original callback.
@@ -89,7 +89,7 @@ CTOption.prototype.piggybackDataFeed = function() {
     };
 
     dataSocket.onerror = function(error) {
-        console.error('ERROR: ' + (error.message || error));
+        console.error(new Date() + ' ERROR: ' + (error.message || error));
         originalOnError();
     };
 
@@ -109,13 +109,13 @@ CTOption.prototype.showSymbolControls = function(symbol) {
 CTOption.prototype.callTrade = function(symbol, investment) {
     // Ensure necessary parameters are present.
     if (!symbol) {
-        console.error('No symbol provided');
+        console.error(new Date() + ' No symbol provided');
     }
     if (!investment) {
-        console.error('No investment provided');
+        console.error(new Date() + ' No investment provided');
     }
     if (localStorage.reauthenticating) {
-        console.log('Reauthentication in progress; trade aborted');
+        console.log(new Date() + ' Reauthentication in progress; trade aborted');
         return;
     }
 
@@ -129,7 +129,7 @@ CTOption.prototype.callTrade = function(symbol, investment) {
         return;
     }
 
-    console.log('Attempting CALL for ' + symbol + ' at ' + new Date() + ' for $' + investment + '.');
+    console.log(new Date() + ' Attempting CALL for ' + symbol + ' at ' + new Date() + ' for $' + investment + '.');
 
     // Ensure the controls are displayed.
     this.showSymbolControls(symbol);
@@ -147,13 +147,13 @@ CTOption.prototype.callTrade = function(symbol, investment) {
 CTOption.prototype.putTrade = function(symbol, investment) {
     // Ensure necessary parameters are present.
     if (!symbol) {
-        console.error('No symbol provided');
+        console.error(new Date() + ' No symbol provided');
     }
     if (!investment) {
-        console.error('No investment provided');
+        console.error(new Date() + ' No investment provided');
     }
     if (localStorage.reauthenticating) {
-        console.log('Reauthentication in progress; trade aborted');
+        console.log(new Date() + ' Reauthentication in progress; trade aborted');
         return;
     }
 
@@ -167,7 +167,7 @@ CTOption.prototype.putTrade = function(symbol, investment) {
         return;
     }
 
-    console.log('Attempting PUT for ' + symbol + ' at ' + new Date() + ' for $' + investment + '.');
+    console.log(new Date() + ' Attempting PUT for ' + symbol + ' at ' + new Date() + ' for $' + investment + '.');
 
     // Ensure the controls are displayed.
     this.showSymbolControls(symbol);
@@ -194,13 +194,13 @@ CTOption.prototype.setTradeInvestment = function(symbol, investment) {
 CTOption.prototype.initiateTrade = function(symbol) {
     $('#assetID_10_' + symbol + ' .apply_button').click();
 
-    console.log('Trade placed.');
+    console.log(new Date() + ' Trade placed.');
 
     // Automatically log in again if necessary.
     window.setTimeout(function() {
         // Check whether the Login dialog is shown.
         if ($('#iPopUp').length > 0) {
-            console.log('Logged out. Logging in again...');
+            console.log(new Date() + ' Logged out. Logging in again...');
 
             // Fill in the form.
             $('#iPopUp').contents().find('#popuptxtUsername').val(localStorage.username);
@@ -238,8 +238,10 @@ window.setTimeout(function() {
 }, 5 * 1000);
 
 // Re-authenticate every two hours.
-window.setTimeout(function() {
+window.setInterval(function() {
     var tempWindow;
+
+    console.log(new Date() + ' Reauthenticating...');
 
     // Set a flag instructing the new window to automatically sign out on load.
     localStorage.signOutOnLoad = 'true';
@@ -248,9 +250,11 @@ window.setTimeout(function() {
     localStorage.reauthenticating = 'true';
 
     tempWindow = window.open('https://ctoption.com');
+    console.log(new Date() + ' New window opened...');
 
     // Close the temporary window after a bit and reload the current page.
     window.setTimeout(function() {
         tempWindow.close();
+        console.log(new Date() + ' New window closed');
     }, 30 * 1000)
 }, 2 * 60 * 60 * 1000);
