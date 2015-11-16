@@ -21,7 +21,7 @@ Reversals.prototype.analyze = function(dataPoint) {
     self.tick(dataPoint);
 
     // Only trade when the profitability is highest (11pm - 4pm CST).
-    if (hour >= 16) {
+    if (hour >= 16 && hour < 23) {
         // Track the current data point as the previous data point for the next tick.
         self.previousDataPoint = dataPoint;
         return;
