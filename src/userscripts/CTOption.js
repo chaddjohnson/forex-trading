@@ -257,4 +257,4 @@ window.setInterval(function() {
         tempWindow.close();
         console.log(new Date() + ' New window closed');
     }, 30 * 1000)
-}, 2 * 60 * 60 * 1000);
+}, 1 * 60 * 60 * 1000);
