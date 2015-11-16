@@ -8,6 +8,13 @@ function CTOption() {
 
     Base.call(self, symbols);
 
+    // Remove flag since reauthentication is done.
+    delete localStorage.reauthenticating;
+
+    // Select the 5-minute "Hyper" tab.
+    $('#bnmain .tabs .tab')[3].click();
+    $('#bnmain .hyperfilter li')[3].click()
+
     // Show controls for all symbols.
     symbols.forEach(function(symbol) {
         self.showSymbolControls(symbol);
@@ -226,13 +233,6 @@ window.setTimeout(function() {
         $('.btnLogout').click();
     }
     else {
-        // Remove flag since reauthentication is done.
-        delete localStorage.reauthenticating;
-
-        // Select the 5-minute "Hyper" tab.
-        $('#bnmain .tabs .tab')[3].click();
-        $('#bnmain .hyperfilter li')[3].click()
-
         client = new CTOption();
     }
 }, 5 * 1000);
