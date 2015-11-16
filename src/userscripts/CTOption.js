@@ -218,6 +218,10 @@ window.setTimeout(function() {
         $('.btnLogout').click();
     }
     else {
+        // Select the 5-minute "Hyper" tab.
+        $('#bnmain .tabs .tab')[3].click();
+        $('#bnmain .hyperfilter li')[3].click()
+
         client = new CTOption();
     }
 }, 5 * 1000);
