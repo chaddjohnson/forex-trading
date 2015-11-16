@@ -252,6 +252,5 @@ window.setTimeout(function() {
     // Close the temporary window after a bit and reload the current page.
     window.setTimeout(function() {
         tempWindow.close();
-        window.location.reload();
     }, 30 * 1000)
 }, 2 * 60 * 60 * 1000);
