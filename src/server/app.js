@@ -26,10 +26,15 @@ var serverOptions = {
     // cert: fs.readFileSync('../../server.crt')
 };
 var serverOptions = ws.createServer(serverOptions, function(client) {
+    var timer = null;
+
     console.log('New connection');
 
     client.on('close', function(code, reason) {
         console.log('Connection closed');
+
+        // Stop the timer on disconnection.
+        clearTimeout(timer);
     });
 
     client.on('error', function(error) {
@@ -171,7 +176,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
             });
         }
 
-        setTimeout(tickTimer, 1000 - drift);
+        timer = setTimeout(tickTimer, 1000 - drift);
     }
 
     // Start the timer.
