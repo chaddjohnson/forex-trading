@@ -79,6 +79,10 @@ Base.prototype.payoutIsHighEnough = function(symbol) {
     throw 'payoutIsHighEnough() not implemented';
 };
 
+Base.prototype.tradeMakesBalanceTooHigh = function(investment) {
+    throw 'tradeMakesBalanceTooHigh() not implemented';
+};
+
 Base.prototype.setTradeInvestment = function(symbol, investment) {
     throw 'setTradeInvestment() not implemented';
 };
