@@ -184,7 +184,13 @@ CTOption.prototype.putTrade = function(symbol, investment) {
 };
 
 CTOption.prototype.payoutIsHighEnough = function(symbol) {
-    return parseInt($('#assetID_10_' + symbol + ' .box_header li').get(2).innerText) >= 70;
+    var element = $('#assetID_10_' + symbol + ' .box_header li').get(2);
+
+    if (element) {
+        return parseInt(element.innerText) >= 70;
+    }
+
+    return false;
 };
 
 CTOption.prototype.tradeMakesBalanceTooHigh = function(investment) {
