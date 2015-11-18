@@ -112,6 +112,11 @@ CTOption.prototype.callTrade = function(symbol, investment) {
         console.error(new Date() + ' No investment provided');
     }
 
+    // Ensure UI for symbol is present.
+    if ($('#assetID_10_' + symbol).length === 0) {
+        return;
+    }
+
     // Verify payout is high enough to trade.
     if (!this.payoutIsHighEnough(symbol)) {
         return;
@@ -120,11 +125,6 @@ CTOption.prototype.callTrade = function(symbol, investment) {
     // Ensure it's okay to trade based on the account balance.
     if (this.tradeMakesBalanceTooHigh(investment)) {
         console.log(new Date() + ' Maximum open positions reached; aborting trade for ' + symbol);
-        return;
-    }
-
-    // Ensure UI for symbol is present.
-    if ($('#assetID_10_' + symbol).length === 0) {
         return;
     }
 
@@ -152,6 +152,11 @@ CTOption.prototype.putTrade = function(symbol, investment) {
         console.error(new Date() + ' No investment provided');
     }
 
+    // Ensure UI for symbol is present.
+    if ($('#assetID_10_' + symbol).length === 0) {
+        return;
+    }
+
     // Verify payout is high enough to trade.
     if (!this.payoutIsHighEnough(symbol)) {
         return;
@@ -160,11 +165,6 @@ CTOption.prototype.putTrade = function(symbol, investment) {
     // Ensure it's okay to trade based on the account balance.
     if (this.tradeMakesBalanceTooHigh(investment)) {
         console.log(new Date() + ' Maximum open positions reached; aborting trade for ' + symbol);
-        return;
-    }
-
-    // Ensure UI for symbol is present.
-    if ($('#assetID_10_' + symbol).length === 0) {
         return;
     }
 
@@ -190,6 +190,7 @@ CTOption.prototype.payoutIsHighEnough = function(symbol) {
         return parseInt(element.innerText) >= 70;
     }
 
+    console.log('Unable to get payout for element');
     return false;
 };
 
