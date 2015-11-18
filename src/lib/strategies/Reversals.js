@@ -24,7 +24,7 @@ Reversals.prototype.analyze = function(dataPoint) {
     if (hour >= 16 && hour < 23) {
         // Track the current data point as the previous data point for the next tick.
         self.previousDataPoint = dataPoint;
-        return;
+        return null;
     }
 
     // For every configuration...

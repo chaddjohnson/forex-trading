@@ -240,11 +240,7 @@ window.setTimeout(function() {
 
 // Keep the session active.
 window.setInterval(function() {
-    console.log(new Date() + ' Opening window to keep session active...');
-
     var tempWindow = window.open('https://ctoption.com');
-
-    console.log(new Date() + ' Window opened');
 
     // Close the temporary window after a bit and reload the current page.
     window.setTimeout(function() {
