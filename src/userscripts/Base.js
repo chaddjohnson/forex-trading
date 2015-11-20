@@ -45,14 +45,14 @@ Base.prototype.initializeTradingSocket = function() {
 
             switch (message.type) {
                 case tradingMessageTypes.CALL:
-                    if (!localStorage.stopTrading) {
+                    if (!localStorage.stopTrading && self.symbols.indexOf(message.data.symbol) > -1) {
                         self.callTrade(message.data.symbol, message.data.investment);
                     }
 
                     break;
 
                 case tradingMessageTypes.PUT:
-                    if (!localStorage.stopTrading) {
+                    if (!localStorage.stopTrading && self.symbols.indexOf(message.data.symbol) > -1) {
                         self.putTrade(message.data.symbol, message.data.investment);
                     }
 
