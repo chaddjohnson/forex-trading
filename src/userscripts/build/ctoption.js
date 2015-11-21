@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CTOption Trading Bot
 // @namespace    forex
-// @version      0.3.4
+// @version      0.3.5
 // @description  Tampermonkey bot for trading on CTOption.
 // @author       Chad Johnson
 // @match        https://ctoption.com/*
