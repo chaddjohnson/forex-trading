@@ -1,3 +1,106 @@
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+function Base(symbols) {
+    var self = this;
+
+    self.symbols = symbols;
+
+    // Begin piggybacking on data feed.
+    self.piggybackDataFeed();
+
+    // Keep piggybacking active.
+    window.setInterval(function() {
+        if (!io.sockets['https://client.ctoption.com:443'].transport.websocket.piggybacked) {
+            self.piggybackDataFeed();
+        }
+    }, 5000);
+
+    self.initializeTradingSocket();
+}
+
+Base.prototype.getTradingMessageTypes = function() {
+    return {
+        QUOTE: 1,
+        CALL: 2,
+        PUT: 3
+    };
+};
+
+Base.prototype.getSymbols = function() {
+    return this.symbols;
+};
+
+Base.prototype.getTradingSocket = function() {
+    return this.tradingSocket;
+}
+
+Base.prototype.initializeTradingSocket = function() {
+    var self = this;
+    var tradingMessageTypes = self.getTradingMessageTypes();
+
+    self.tradingSocket = new WebSocket('ws://localhost:8080');
+
+    // Watch for messages from the trading socket.
+    self.tradingSocket.onmessage = function(event) {
+        try {
+            var message = JSON.parse(event.data);
+
+            switch (message.type) {
+                case tradingMessageTypes.CALL:
+                    if (!localStorage.stopTrading && self.symbols.indexOf(message.data.symbol) > -1) {
+                        self.callTrade(message.data.symbol, message.data.investment);
+                    }
+
+                    break;
+
+                case tradingMessageTypes.PUT:
+                    if (!localStorage.stopTrading && self.symbols.indexOf(message.data.symbol) > -1) {
+                        self.putTrade(message.data.symbol, message.data.investment);
+                    }
+
+                    break;
+            }
+        }
+        catch (error) {
+            console.error(new Date() + ' TRADING SOCKET ERROR: ' + (error.message || error));
+        }
+    };
+};
+
+Base.prototype.piggybackDataFeed = function() {
+    throw 'piggybackDataFeed() not implemented';
+};
+
+Base.prototype.showSymbolControls = function() {
+    throw 'showSymbolControls() not implemented';
+};
+
+Base.prototype.callTrade = function(symbol, investment) {
+    throw 'callTrade() not implemented';
+};
+
+Base.prototype.putTrade = function(symbol, investment) {
+    throw 'putTrade() not implemented';
+};
+
+Base.prototype.payoutIsHighEnough = function(symbol) {
+    throw 'payoutIsHighEnough() not implemented';
+};
+
+Base.prototype.tradeMakesBalanceTooHigh = function(investment) {
+    throw 'tradeMakesBalanceTooHigh() not implemented';
+};
+
+Base.prototype.setTradeInvestment = function(symbol, investment) {
+    throw 'setTradeInvestment() not implemented';
+};
+
+Base.prototype.initiateTrade = function(symbol) {
+    throw 'initiateTrade() not implemented';
+};
+
+module.exports = Base;
+
+},{}],2:[function(require,module,exports){
 var Base = require('./Base');
 
 function CTOption() {
@@ -255,3 +358,5 @@ window.setInterval(function() {
         tempWindow.close();
     }, 30 * 1000)
 }, 30 * 60 * 1000);
+
+},{"./Base":1}]},{},[2]);
