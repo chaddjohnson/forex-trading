@@ -13,6 +13,7 @@ var messageTypes = {
 // Settings
 //var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD', 'CADJPY', 'AUDJPY'];
 var symbols = ['USDJPY'];
+var seconds = [56, 57, 58, 59, 0];
 var investment = 5;
 var strategyFn = strategies.Reversals;
 
@@ -46,6 +47,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         try {
             var message = JSON.parse(data);
             var quoteDate;
+            var supplementalQuote = null;
 
             switch (message.type) {
                 case messageTypes.QUOTE:
@@ -60,22 +62,24 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                             // yet for the current minute, then use the previous data point's close price
                             // as the open price for this minute.
                             if (symbolQuotes.length === 0 && quoteDate.getSeconds() > 0 && lastDataPoints[quote.symbol]) {
-                                symbolQuotes.push({
+                                supplementalQuote = {
                                     symbol: quote.symbol,
                                     price: lastDataPoints[quote.symbol].close,
                                     timestamp: quote.timestamp - (quoteDate.getSeconds() * 1000)
+                                };
+
+                                seconds.forEach(function(second) {
+                                    symbolQuotes[second].push(supplementalQuote);
                                 });
 
                                 // Log data to a file.
-                                fs.appendFileSync('./data.csv', JSON.stringify({
-                                    symbol: quote.symbol,
-                                    price: lastDataPoints[quote.symbol].close,
-                                    timestamp: quote.timestamp - (quoteDate.getSeconds() * 1000)
-                                }) + '\n');
+                                fs.appendFileSync('./data.csv', JSON.stringify(supplementalQuote) + '\n');
                             }
 
                             // Track the quote data by symbol.
-                            symbolQuotes.push(quote);
+                            seconds.forEach(function(second) {
+                                symbolQuotes[second].push(quote);
+                            });
 
                             // Log data to a file.
                             fs.appendFileSync('./data.csv', JSON.stringify(quote) + '\n');
@@ -90,32 +94,33 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         }
     });
 
-    function calculateMinuteData(symbol) {
-        var symbolQuotes = quotes[symbol];
+    function calculateMinuteData(symbol, second) {
+        var symbolQuotes = quotes[symbol][second];
+        var lastDataPoint = lastDataPoints[symbol][second];
         var firstQuoteTimestamp;
         var dataPoint = null;
         var dataPointTimestamp = new Date().getTime();
 
-        if (lastDataPoints[symbol]) {
-            firstQuoteTimestamp = lastDataPoints[symbol].timestamp + (60 * 1000);
+        if (lastDataPoint) {
+            firstQuoteTimestamp = lastDataPoint.timestamp + (60 * 1000);
             firstQuoteTimestamp = firstQuoteTimestamp - (new Date(firstQuoteTimestamp).getSeconds() * 1000);
 
             // Use the first second of the minute for the data point timestamp.
-            dataPointTimestamp = firstQuoteTimestamp + (59 * 1000);
+            dataPointTimestamp = firstQuoteTimestamp + (second * 1000);
         }
 
         // If there are no quotes for the minute, then create one using the previous data point.
-        if (symbolQuotes.length === 0 && lastDataPoints[symbol]) {
+        if (symbolQuotes.length === 0 && lastDataPoint) {
             symbolQuotes.push({
                 symbol: symbol,
-                price: lastDataPoints[symbol].close,
+                price: lastDataPoint.close,
                 timestamp: firstQuoteTimestamp
             });
 
             // Log data to a file.
             fs.appendFileSync('./data.csv', JSON.stringify({
                 symbol: symbol,
-                price: lastDataPoints[symbol].close,
+                price: lastDataPoint.close,
                 timestamp: firstQuoteTimestamp
             }) + '\n');
         }
@@ -126,6 +131,8 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         }
 
         dataPoint = {
+            symbol: symbol,
+            second: second,
             high: _(symbolQuotes).max('price').price,
             low: _(symbolQuotes).min('price').price,
             open: _(symbolQuotes).first().price,
@@ -133,8 +140,8 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
             timestamp: dataPointTimestamp
         };
 
-        quotes[symbol] = [];
-        lastDataPoints[symbol] = dataPoint;
+        quotes[symbol][second] = [];
+        lastDataPoints[symbol][second] = dataPoint;
 
         return dataPoint;
     }
@@ -142,40 +149,42 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
     function tickTimer() {
         var date = new Date();
         var drift = date.getMilliseconds();
-        var second = date.getSeconds();
+        var currentSecond = date.getSeconds();
         var analysis = '';
         var dataPoint;
 
-        // Enter trades only on the 59th second.
-        if (second === 59) {
-            // Perform analysis for each symbol.
-            symbols.forEach(function(symbol) {
-                dataPoint = calculateMinuteData(symbol);
+        seconds.forEach(function(second) {
+            // Enter trades only on specific seconds.
+            if (currentSecond === second) {
+                // Perform analysis for each symbol.
+                symbols.forEach(function(symbol) {
+                    dataPoint = calculateMinuteData(symbol, second);
 
-                if (!dataPoint) {
-                    // No data point available, so no analysis can take place.
-                    return;
-                }
+                    if (!dataPoint) {
+                        // No data point available, so no analysis can take place.
+                        return;
+                    }
 
-                // Log data to a file.
-                fs.appendFileSync('./data.csv', JSON.stringify(dataPoint) + '\n');
+                    // Log data to a file.
+                    fs.appendFileSync('./data.csv', JSON.stringify(dataPoint) + '\n');
 
-                // Analyze the data to date.
-                analysis = symbolStrategies[symbol].analyze(dataPoint);
+                    // Analyze the data to date.
+                    analysis = symbolStrategies[symbol][second].analyze(dataPoint);
 
-                // If analysis sends back a positive result, then tell the client to initiate a trade.
-                if (analysis) {
-                    client.sendText(JSON.stringify({
-                        type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
-                        data: {
-                            symbol: symbol,
-                            investment: investment
-                        }
-                    }));
-                    console.log(analysis + ' for ' + symbol + ' at ' + new Date() + ' for $' + investment);
-                }
-            });
-        }
+                    // If analysis sends back a positive result, then tell the client to initiate a trade.
+                    if (analysis) {
+                        client.sendText(JSON.stringify({
+                            type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
+                            data: {
+                                symbol: symbol,
+                                investment: investment
+                            }
+                        }));
+                        console.log(analysis + ' for ' + symbol + ' at ' + new Date() + ' for $' + investment);
+                    }
+                });
+            }
+        });
 
         timer = setTimeout(tickTimer, 1000 - drift);
     }
@@ -187,9 +196,13 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
 symbols.forEach(function(symbol) {
     var settings = require('../../settings/' + symbol + '.js');
 
-    // Instantiate a new strategy instance for the symbol.
-    symbolStrategies[symbol] = new strategyFn(symbol, settings);
+    symbolStrategies[symbol] = {};
+    quotes[symbol] = {};
+    lastDataPoints[symbol] = {};
 
-    // Initialize quote data for the symbol.
-    quotes[symbol] = [];
+    // Instantiate a new strategy instance and quote data for the symbol for each second.
+    seconds.forEach(function(second) {
+        symbolStrategies[symbol][second] = new strategyFn(symbol, settings);
+        quotes[symbol][second] = [];
+    });
 });
