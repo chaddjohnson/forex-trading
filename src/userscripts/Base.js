@@ -40,6 +40,9 @@ Base.prototype.initializeTradingSocket = function() {
 
     // Watch for messages from the trading socket.
     self.tradingSocket.onmessage = function(event) {
+        // DISABLE TRADING TEMPORARILY.
+        return;
+
         try {
             var message = JSON.parse(event.data);
 
