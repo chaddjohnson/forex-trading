@@ -11,8 +11,7 @@ var messageTypes = {
 };
 
 // Settings
-//var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD', 'CADJPY', 'AUDJPY'];
-var symbols = ['USDJPY'];
+var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD', 'CADJPY', 'AUDJPY'];
 var seconds = [56, 57, 58, 59, 0];
 var investment = 5;
 var strategyFn = strategies.Reversals;
