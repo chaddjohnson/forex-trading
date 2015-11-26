@@ -214,7 +214,7 @@ CTOption.prototype.initiateTrade = function(symbol) {
 
 window.setTimeout(function() {
     var client = new CTOption();
-}, 5 * 1000);
+}, 5 * 1000);  // 5 seconds
 
 // Keep the session active.
 window.setInterval(function() {
@@ -223,5 +223,10 @@ window.setInterval(function() {
     // Close the temporary window after a bit and reload the current page.
     window.setTimeout(function() {
         tempWindow.close();
-    }, 30 * 1000)
-}, 30 * 60 * 1000);
+    }, 30 * 1000);  // 30 seconds
+}, 30 * 60 * 1000);  // 30 minutes
+
+// Refresh the page every so often to prevent white screen issue.
+window.setInterval(function() {
+    window.location.reload(true);
+}, 6.25 * 60 * 60 * 1000);  // 6.25 hours
