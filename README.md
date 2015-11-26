@@ -39,8 +39,11 @@ the userscript will automatically run.
 2. Run the web socket service: `node src/server/app`.
 3. Open Google Chrome and visit https://ctoption.com/.
 4. Sign into your CTOption trading account.
-5. In the address bar, on the right side, you will likely see a gray shield icon. Click this, and a menu
-will appear. In this menu, click the "Load unsafe scripts" button. This should cause the web page to reload.
+5. ~~In the address bar, on the right side, you will likely see a gray shield icon. Click this, and a menu
+will appear. In this menu, click the "Load unsafe scripts" button. This should cause the web page to reload.~~
+6. Go to https://localhost:8080.
+    1. Follow the stops [here](https://www.accuweaver.com/2014/09/19/make-chrome-accept-a-self-signed-certificate-on-osx/) to trust the self-signed certificate system-wide.
+    2. Click the link to proceed.
 
 Five seconds after the web page reloads, you should see "New connection" display in the terminal window.
 If you see this, the bot is running successfully!

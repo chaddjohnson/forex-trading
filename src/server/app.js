@@ -22,9 +22,9 @@ var quotes = {};
 var lastDataPoints = {};
 
 var serverOptions = {
-    // secure: true,
-    // key: fs.readFileSync('../../server.key'),
-    // cert: fs.readFileSync('../../server.crt')
+    secure: true,
+    key: fs.readFileSync('../../key.pem'),
+    cert: fs.readFileSync('../../cert.pem')
 };
 var serverOptions = ws.createServer(serverOptions, function(client) {
     var timer = null;
