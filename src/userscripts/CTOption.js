@@ -210,39 +210,10 @@ CTOption.prototype.initiateTrade = function(symbol) {
     $('#assetID_10_' + symbol + ' .apply_button').click();
 
     console.log(new Date() + ' Trade placed.');
-
-    // Automatically log in again if necessary.
-    window.setTimeout(function() {
-        // Check whether the Login dialog is shown.
-        if ($('#iPopUp').length > 0) {
-            console.log(new Date() + ' Logged out. Logging in again...');
-
-            // Fill in the form.
-            $('#iPopUp').contents().find('#popuptxtUsername').val(localStorage.username);
-            $('#iPopUp').contents().find('#popuptxtPassword').val(localStorage.password);
-
-            // Click the Login button.
-            $('#iPopUp').contents().find('#popupbtnformLogin').click();
-        }
-    }, 2 * 1000);
 };
 
 window.setTimeout(function() {
-    var client;
-
-    // Cache credentials so the bot can automatically log in again if logged out.
-    localStorage.username = localStorage.username || prompt('Please enter your username');
-    localStorage.password = localStorage.password || prompt('Please enter your password');
-
-    // Log in automatically if not logged in.
-    if ($('.usernameval').length === 0) {
-        $('#txtUsername').val(localStorage.username);
-        $('#txtPassword').val(localStorage.password);
-        $('#btnformLogin').click();
-    }
-    else {
-        client = new CTOption();
-    }
+    var client = new CTOption();
 }, 5 * 1000);
 
 // Keep the session active.
