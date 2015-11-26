@@ -36,7 +36,7 @@ the userscript will automatically run.
 ### Usage
 
 1. Open a terminal and go to the directory where you cloned this repository.
-2. Run the web socket service: `node src/server/app`.
+2. Run the web socket service: `cd src/server; node app`.
 3. Open Google Chrome and visit https://ctoption.com/.
 4. Sign into your CTOption trading account.
 5. ~~In the address bar, on the right side, you will likely see a gray shield icon. Click this, and a menu
