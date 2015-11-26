@@ -32,6 +32,7 @@ Currently only one bot exists, and that is for [CTOption](https://ctoption.com/)
 contents of `src/userscripts/build/ctoption.js` into a new Tampermonkey script. Now enable the script (a green
 icon in the Tampermonkey dashboard means its enabled). Nothing else is required; when visiting ctoption.com,
 the userscript will automatically run.
+7. In the "Pop-ups" section of the Chrome Content settings page, add an allowed exception for "https://[*.]ctoption.com:443".
 
 ### Usage
 
