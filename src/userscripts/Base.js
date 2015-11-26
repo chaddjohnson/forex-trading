@@ -36,7 +36,7 @@ Base.prototype.initializeTradingSocket = function() {
     var self = this;
     var tradingMessageTypes = self.getTradingMessageTypes();
 
-    self.tradingSocket = new WebSocket('wss://localhost:8080');
+    self.tradingSocket = new WebSocket('ws://localhost:8080');
 
     // Watch for messages from the trading socket.
     self.tradingSocket.onmessage = function(event) {
