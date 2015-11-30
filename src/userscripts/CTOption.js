@@ -209,8 +209,6 @@ CTOption.prototype.setTradeInvestment = function(symbol, investment) {
 
 CTOption.prototype.initiateTrade = function(symbol) {
     $('#assetID_10_' + symbol + ' .apply_button').click();
-
-    console.log(new Date() + ' Trade placed.');
 };
 
 window.setTimeout(function() {
