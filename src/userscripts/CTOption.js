@@ -224,8 +224,3 @@ window.setInterval(function() {
         tempWindow.close();
     }, 30 * 1000);  // 30 seconds
 }, 30 * 60 * 1000);  // 30 minutes
-
-// Refresh the page every so often to prevent white screen issue.
-window.setInterval(function() {
-    window.location.reload(true);
-}, 6.25 * 60 * 60 * 1000);  // 6.25 hours
