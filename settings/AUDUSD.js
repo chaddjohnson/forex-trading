@@ -450,20 +450,3 @@ module.exports = {
         {study: studies.PolynomialRegressionChannel, inputs: {length: 800, degree: 2}, outputMap: {regression: 'trendPrChannel800_2'}}
     ]
 };
-
-
-[ 'prChannelLower100_2_195',
-  'prChannelLower100_3_19',
-  'prChannelLower100_3_21',
-  'prChannelLower100_3_215',
-  'prChannelLower250_2_19',
-  'prChannelLower250_2_21',
-  'prChannelLower250_2_215',
-  'prChannelLower250_3_19',
-  'prChannelLower250_4_195',
-  'prChannelLower300_2_19',
-  'prChannelLower300_2_195',
-  'prChannelLower300_3_19',
-  'prChannelLower300_3_195',
-  'prChannelLower300_4_19',
-  'prChannelLower300_4_195' ]
