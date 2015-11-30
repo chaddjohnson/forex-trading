@@ -206,3 +206,5 @@ symbols.forEach(function(symbol) {
         quotes[symbol][second] = [];
     });
 });
+
+console.log('Server started ' + new Date());
