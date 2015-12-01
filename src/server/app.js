@@ -24,7 +24,7 @@ var symbolStrategies = {};
 var quotes = {};
 var lastDataPoints = {};
 
-var lastTickTimestamp = null;
+var lastTickTimestamp = 0;
 
 var serverOptions = {
     // secure: true,
