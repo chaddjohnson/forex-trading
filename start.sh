@@ -8,4 +8,4 @@ else
 fi
 
 # Start the trading service.
-node ./src/server/app
+forever ./src/server/app.js
