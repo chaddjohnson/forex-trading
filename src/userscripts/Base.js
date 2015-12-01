@@ -20,7 +20,9 @@ Base.prototype.getTradingMessageTypes = function() {
     return {
         QUOTE: 1,
         CALL: 2,
-        PUT: 3
+        PUT: 3,
+        CONNECTED: 4,
+        DISCONNECTED: 5
     };
 };
 

@@ -7,7 +7,9 @@ var port = 8080;
 var messageTypes = {
     QUOTE: 1,
     CALL: 2,
-    PUT: 3
+    PUT: 3,
+    CONNECTED: 4,
+    DISCONNECTED: 5
 };
 
 // Settings
@@ -36,7 +38,10 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         console.log('[' + new Date() + '] Connection closed');
 
         // Stop the timer on disconnection.
-        clearTimeout(timer);
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
+        }
     });
 
     client.on('error', function(error) {
@@ -85,6 +90,27 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                             fs.appendFileSync('./data.csv', JSON.stringify(quote) + '\n');
                         }
                     });
+
+                    break;
+
+                case messageTypes.CONNECTED:
+                    console.log('[' + new Date() + '] Data socket connected');
+
+                    if (!timer) {
+                        // Restart the timer.
+                        tickTimer();
+                    }
+
+                    break;
+
+                case messageTypes.DISCONNECTED:
+                    console.log('[' + new Date() + '] Data socket disconnected');
+
+                    // Stop the timer on disconnection.
+                    if (timer) {
+                        clearTimeout(timer);
+                        timer = null;
+                    }
 
                     break;
             }

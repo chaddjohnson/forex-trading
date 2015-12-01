@@ -23,9 +23,10 @@ function CTOption() {
 CTOption.prototype = Object.create(Base.prototype);
 
 CTOption.prototype.piggybackDataFeed = function() {
-    var self = this;
-
     console.log('[' + new Date() + '] Piggybacking on data socket');
+
+    var self = this;
+    var tradingMessageTypes = self.getTradingMessageTypes();
 
     // Get a reference to the socket object.
     var dataSocket = io.sockets['https://client.ctoption.com:443'].transport.websocket;
@@ -46,7 +47,6 @@ CTOption.prototype.piggybackDataFeed = function() {
             var data = JSON.parse(event.data.replace('5:::', ''));
             var dataPoint;
             var quotes = [];
-            var tradingMessageTypes = self.getTradingMessageTypes();
             var tradingMessage = {
                 type: tradingMessageTypes.QUOTE,
                 data: []
@@ -83,6 +83,12 @@ CTOption.prototype.piggybackDataFeed = function() {
 
     dataSocket.onclose = function() {
         console.error(new Date() + ' Data socket closed');
+
+        // Let the trading service know the data socket has disconnected.
+        self.getTradingSocket().send(JSON.stringify({
+            type: tradingMessageTypes.DISCONNECTED
+        }));
+
         originalOnClose();
     };
 
@@ -92,6 +98,11 @@ CTOption.prototype.piggybackDataFeed = function() {
     };
 
     dataSocket.piggybacked = true;
+
+    // Let the trading service know the data socket has reconnected.
+    self.getTradingSocket().send(JSON.stringify({
+        type: tradingMessageTypes.CONNECTED
+    }));
 };
 
 CTOption.prototype.showSymbolControls = function(symbol) {
