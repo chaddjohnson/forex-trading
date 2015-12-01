@@ -39,6 +39,12 @@ CTOption.prototype.piggybackDataFeed = function() {
 
     dataSocket.onopen = function() {
         console.log('[' + new Date() + '] Data socket opened');
+
+        // Let the trading service know the data socket has reconnected.
+        self.getTradingSocket().send(JSON.stringify({
+            type: tradingMessageTypes.CONNECTED
+        }));
+
         originalOnOpen();
     };
 
@@ -99,10 +105,12 @@ CTOption.prototype.piggybackDataFeed = function() {
 
     dataSocket.piggybacked = true;
 
-    // Let the trading service know the data socket has reconnected.
-    self.getTradingSocket().send(JSON.stringify({
-        type: tradingMessageTypes.CONNECTED
-    }));
+    if (dataSocket.readyState === 1 && self.getTradingSocket().readyState === 1) {
+        // Let the trading service know the data socket has reconnected.
+        self.getTradingSocket().send(JSON.stringify({
+            type: tradingMessageTypes.CONNECTED
+        }));
+    }
 };
 
 CTOption.prototype.showSymbolControls = function(symbol) {

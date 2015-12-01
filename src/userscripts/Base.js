@@ -3,6 +3,8 @@ function Base(symbols) {
 
     self.symbols = symbols;
 
+    self.initializeTradingSocket();
+
     // Begin piggybacking on data feed.
     self.piggybackDataFeed();
 
@@ -12,8 +14,6 @@ function Base(symbols) {
             self.piggybackDataFeed();
         }
     }, 5000);
-
-    self.initializeTradingSocket();
 }
 
 Base.prototype.getTradingMessageTypes = function() {
@@ -39,6 +39,7 @@ Base.prototype.initializeTradingSocket = function() {
     var tradingMessageTypes = self.getTradingMessageTypes();
 
     self.tradingSocket = new WebSocket('ws://localhost:8080');
+    console.log('[' + new Date() + '] Trading socket connected');
 
     // Watch for messages from the trading socket.
     self.tradingSocket.onmessage = function(event) {
@@ -64,6 +65,15 @@ Base.prototype.initializeTradingSocket = function() {
         catch (error) {
             console.error('[' + new Date() + '] TRADING SOCKET ERROR: ' + (error.message || error));
         }
+    };
+
+    self.tradingSocket.onmessage = function(event) {
+        console.log('[' + new Date() + '] Trading socket disconnected; reconnecting...');
+
+        // Reopen the trading socket if it closes.
+        window.setTimeout(function() {
+            self.initializeTradingSocket();
+        }, 5 * 1000);  // 5 seconds
     };
 };
 
