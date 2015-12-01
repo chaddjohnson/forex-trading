@@ -25,7 +25,7 @@ CTOption.prototype = Object.create(Base.prototype);
 CTOption.prototype.piggybackDataFeed = function() {
     var self = this;
 
-    console.log(new Date() + ' Piggybacking on data socket');
+    console.log('[' + new Date() + '] Piggybacking on data socket');
 
     // Get a reference to the socket object.
     var dataSocket = io.sockets['https://client.ctoption.com:443'].transport.websocket;
@@ -37,7 +37,7 @@ CTOption.prototype.piggybackDataFeed = function() {
     var originalOnError = dataSocket.onerror;
 
     dataSocket.onopen = function() {
-        console.log(new Date() + ' Data socket opened');
+        console.log('[' + new Date() + '] Data socket opened');
         originalOnOpen();
     };
 
@@ -125,11 +125,11 @@ CTOption.prototype.callTrade = function(symbol, investment) {
 
     // Ensure it's okay to trade based on the account balance.
     if (this.tradeMakesBalanceTooHigh(investment)) {
-        console.log(new Date() + ' Maximum open positions reached; aborting trade for ' + symbol);
+        console.warn('[' + new Date() + '] Maximum open positions reached; aborting trade for ' + symbol);
         return;
     }
 
-    console.log(new Date() + ' Attempting CALL for ' + symbol + ' at ' + new Date() + ' for $' + investment + '.');
+    console.log('[' + new Date() + '] CALL for ' + symbol + ' at ' + new Date() + ' for $' + investment + '.');
 
     // Ensure the controls are displayed.
     this.showSymbolControls(symbol);
@@ -165,11 +165,11 @@ CTOption.prototype.putTrade = function(symbol, investment) {
 
     // Ensure it's okay to trade based on the account balance.
     if (this.tradeMakesBalanceTooHigh(investment)) {
-        console.log(new Date() + ' Maximum open positions reached; aborting trade for ' + symbol);
+        console.warn('[' + new Date() + '] Maximum open positions reached; aborting trade for ' + symbol);
         return;
     }
 
-    console.log(new Date() + ' Attempting PUT for ' + symbol + ' at ' + new Date() + ' for $' + investment + '.');
+    console.log('[' + new Date() + '] PUT for ' + symbol + ' at ' + new Date() + ' for $' + investment + '.');
 
     // Ensure the controls are displayed.
     this.showSymbolControls(symbol);
@@ -191,7 +191,7 @@ CTOption.prototype.payoutIsHighEnough = function(symbol) {
         return parseInt(element.innerText) >= 70;
     }
 
-    console.log('Unable to get payout for element');
+    console.error('[' + new Date() + '] Unable to get payout for element');
     return false;
 };
 

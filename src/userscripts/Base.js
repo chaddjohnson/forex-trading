@@ -60,7 +60,7 @@ Base.prototype.initializeTradingSocket = function() {
             }
         }
         catch (error) {
-            console.error(new Date() + ' TRADING SOCKET ERROR: ' + (error.message || error));
+            console.error('[' + new Date() + '] TRADING SOCKET ERROR: ' + (error.message || error));
         }
     };
 };

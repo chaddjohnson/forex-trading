@@ -30,17 +30,17 @@ var serverOptions = {
 var serverOptions = ws.createServer(serverOptions, function(client) {
     var timer = null;
 
-    console.log('New connection');
+    console.log('[' + new Date() + '] New connection');
 
     client.on('close', function(code, reason) {
-        console.log('Connection closed');
+        console.log('[' + new Date() + '] Connection closed');
 
         // Stop the timer on disconnection.
         clearTimeout(timer);
     });
 
     client.on('error', function(error) {
-        console.error(error);
+        console.error('[' + new Date() + ']', error);
     });
 
     client.on('text', function(data) {
@@ -90,7 +90,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
             }
         }
         catch (error) {
-            console.error(error);
+            console.error('[' + new Date() + ']', error);
         }
     });
 
@@ -180,7 +180,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                                 investment: investment
                             }
                         }));
-                        console.log(analysis + ' for ' + symbol + ' at ' + new Date() + ' for $' + investment);
+                        console.log('[' + new Date() + '] ' + analysis + ' for ' + symbol + ' for $' + investment);
                     }
                 });
             }
@@ -207,4 +207,4 @@ symbols.forEach(function(symbol) {
     });
 });
 
-console.log('Server started ' + new Date());
+console.log('[' + new Date() + '] Server started');
