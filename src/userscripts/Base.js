@@ -67,7 +67,7 @@ Base.prototype.initializeTradingSocket = function() {
         }
     };
 
-    self.tradingSocket.onmessage = function(event) {
+    self.tradingSocket.onclose = function(event) {
         console.log('[' + new Date() + '] Trading socket disconnected; reconnecting...');
 
         // Reopen the trading socket if it closes.
