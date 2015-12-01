@@ -239,6 +239,21 @@ window.setInterval(function() {
     }, 30 * 1000);  // 30 seconds
 }, 30 * 60 * 1000);  // 30 minutes
 
+// Verify at a short interval that the assets are shown.
+window.setInterval(function() {
+    var brokerageHour = new Date().getUTCHours() + 2;
+
+    // Don't check during non-tradable hours.
+    if (brokerageHour >= 0 && brokerageHour < 7) {
+        return;
+    }
+
+    if ($('.assets-container .asset_box').length === 0) {
+        // No assets are shown, so refresh the page.
+        window.location.reload(true);
+    }
+}, 30 * 1000);  // 30 seconds
+
 // Refresh the page every so often to prevent white screen issue.
 window.setInterval(function() {
     window.location.reload(true);
