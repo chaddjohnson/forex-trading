@@ -24,6 +24,8 @@ var symbolStrategies = {};
 var quotes = {};
 var lastDataPoints = {};
 
+var lastTickTimestamp = null;
+
 var serverOptions = {
     // secure: true,
     // key: fs.readFileSync('./key.pem'),
@@ -51,8 +53,6 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
     client.on('text', function(data) {
         try {
             var message = JSON.parse(data);
-            var quoteDate;
-            var supplementalQuote = null;
 
             switch (message.type) {
                 case messageTypes.QUOTE:
@@ -61,26 +61,6 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
 
                         // Only record the data if the data pertains to a symbol being monitored.
                         if (symbols.indexOf(quote.symbol) > -1) {
-                            quoteDate = new Date(quote.timestamp);
-
-                            // If the quote timestamp second is after second 0 and there is no data recorded
-                            // yet for the current minute, then use the previous data point's close price
-                            // as the open price for this minute.
-                            if (symbolQuotes.length === 0 && quoteDate.getSeconds() > 0 && lastDataPoints[quote.symbol]) {
-                                supplementalQuote = {
-                                    symbol: quote.symbol,
-                                    price: lastDataPoints[quote.symbol].close,
-                                    timestamp: quote.timestamp - (quoteDate.getSeconds() * 1000)
-                                };
-
-                                seconds.forEach(function(second) {
-                                    symbolQuotes[second].push(supplementalQuote);
-                                });
-
-                                // Log data to a file.
-                                fs.appendFileSync('./data.csv', JSON.stringify(supplementalQuote) + '\n');
-                            }
-
                             // Track the quote data by symbol.
                             seconds.forEach(function(second) {
                                 symbolQuotes[second].push(quote);
@@ -179,6 +159,19 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         var analysis = '';
         var dataPoint;
 
+        // Reset tick data if the last tick was too long ago.
+        if (lastTickTimestamp && date.getTime() - lastTickTimestamp > 120000) {
+            console.log('[' + new Date() + '] Resetting tick data');
+
+            symbols.forEach(function(symbol) {
+                lastDataPoints[symbol] = {};
+
+                seconds.forEach(function(second) {
+                    quotes[symbol][second] = [];
+                });
+            });
+        }
+
         seconds.forEach(function(second) {
             // Enter trades only on specific seconds.
             if (currentSecond === second) {
@@ -212,6 +205,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
             }
         });
 
+        lastTickTimestamp = new Date().getTime();
         timer = setTimeout(tickTimer, 1000 - drift);
     }
 
