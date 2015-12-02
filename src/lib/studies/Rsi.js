@@ -1,5 +1,5 @@
 var Base = require('./Base');
-var _ = require('underscore');
+var _ = require('lodash');
 
 function Rsi(inputs, outputMap) {
     this.constructor = Rsi;
@@ -19,7 +19,7 @@ Rsi.prototype = Object.create(Base.prototype);
 Rsi.prototype.calculateInitialAverageGain = function(initialDataPoint, dataSegment) {
     var previousDataPoint = initialDataPoint;
 
-    return _(dataSegment).reduce(function(memo, dataPoint) {
+    return _.reduce(dataSegment, function(memo, dataPoint) {
         var gain = dataPoint.close > previousDataPoint.close ? dataPoint.close - previousDataPoint.close : 0;
 
         previousDataPoint = dataPoint;
@@ -31,7 +31,7 @@ Rsi.prototype.calculateInitialAverageGain = function(initialDataPoint, dataSegme
 Rsi.prototype.calculateInitialAverageLoss = function(initialDataPoint, dataSegment) {
     var previousDataPoint = initialDataPoint;
 
-    return _(dataSegment).reduce(function(memo, dataPoint) {
+    return _.reduce(dataSegment, function(memo, dataPoint) {
         var loss = dataPoint.close < previousDataPoint.close ? previousDataPoint.close - dataPoint.close : 0;
 
         previousDataPoint = dataPoint;
@@ -70,7 +70,7 @@ Rsi.prototype.tick = function() {
         averageLoss = this.previousAverageLoss = ((this.previousAverageLoss * (this.getInput('length') - 1)) + currentLoss) / this.getInput('length');
     }
 
-    RS = averageGain / averageLoss;
+    RS = averageLoss > 0 ? averageGain / averageLoss : 0;
 
     returnValue[this.getOutputMapping('rsi')] = 100 - (100 / (1 + RS));
 

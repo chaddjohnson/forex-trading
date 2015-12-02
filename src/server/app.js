@@ -1,5 +1,5 @@
 var fs = require('fs');
-var _ = require('underscore');
+var _ = require('lodash');
 var ws = require('nodejs-websocket');
 var strategies = require('../lib/strategies');
 
@@ -154,10 +154,10 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         dataPoint = {
             symbol: symbol,
             second: second,
-            high: _(symbolQuotes).max('price').price,
-            low: _(symbolQuotes).min('price').price,
-            open: _(symbolQuotes).first().price,
-            close: _(symbolQuotes).last().price,
+            high: _.max(symbolQuotes, 'price').price,
+            low: _.min(symbolQuotes, 'price').price,
+            open: _.first(symbolQuotes).price,
+            close: _.last(symbolQuotes).price,
             timestamp: dataPointTimestamp
         };
 
