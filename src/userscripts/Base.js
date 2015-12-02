@@ -22,7 +22,8 @@ Base.prototype.getTradingMessageTypes = function() {
         CALL: 2,
         PUT: 3,
         CONNECTED: 4,
-        DISCONNECTED: 5
+        DISCONNECTED: 5,
+        DISALLOWED: 6
     };
 };
 
@@ -38,7 +39,9 @@ Base.prototype.initializeTradingSocket = function() {
     var self = this;
     var tradingMessageTypes = self.getTradingMessageTypes();
 
+    self.attemptReconnection = true;
     self.tradingSocket = new WebSocket('ws://localhost:8080');
+
     console.log('[' + new Date() + '] Trading socket connected');
 
     // Watch for messages from the trading socket.
@@ -60,6 +63,12 @@ Base.prototype.initializeTradingSocket = function() {
                     }
 
                     break;
+
+                case tradingMessageTypes.DISALLOWED:
+                    self.attemptReconnection = false;
+                    console.error('[' + new Date() + '] Second client disallowed');
+
+                    break;
             }
         }
         catch (error) {
@@ -68,6 +77,10 @@ Base.prototype.initializeTradingSocket = function() {
     };
 
     self.tradingSocket.onclose = function(event) {
+        if (!self.attemptReconnection) {
+            return;
+        }
+
         console.log('[' + new Date() + '] Trading socket disconnected; reconnecting...');
 
         // Reopen the trading socket if it closes.

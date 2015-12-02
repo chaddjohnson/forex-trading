@@ -27,9 +27,20 @@ CTOption.prototype.piggybackDataFeed = function() {
 
     var self = this;
     var tradingMessageTypes = self.getTradingMessageTypes();
+    var dataSocket;
 
-    // Get a reference to the socket object.
-    var dataSocket = io.sockets['https://client.ctoption.com:443'].transport.websocket;
+    try {
+        // Get a reference to the socket object.
+        dataSocket = io.sockets['https://client.ctoption.com:443'].transport.websocket;
+    }
+    catch (error) {
+        // Error getting reference to the data socket, so try again in a moment.
+        window.setTimeout(function() {
+            self.piggybackDataFeed();
+        }, 1000);
+
+        return;
+    }
 
     // Get references to the original callbacks for the socket.
     var originalOnOpen = dataSocket.onopen;
@@ -49,6 +60,11 @@ CTOption.prototype.piggybackDataFeed = function() {
     };
 
     dataSocket.onmessage = function(event) {
+        if (self.getTradingSocket() && self.getTradingSocket().readyState !== 1) {
+            // Only forward data to the trading socket if it is open.
+            return;
+        }
+
         try {
             var data = JSON.parse(event.data.replace('5:::', ''));
             var dataPoint;

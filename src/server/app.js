@@ -9,7 +9,8 @@ var messageTypes = {
     CALL: 2,
     PUT: 3,
     CONNECTED: 4,
-    DISCONNECTED: 5
+    DISCONNECTED: 5,
+    DISALLOWED: 6
 };
 
 // Settings
@@ -19,12 +20,14 @@ var seconds = [56, 57, 58, 59, 0];
 var investment = 5;
 var strategyFn = strategies.Reversals;
 
+var lastTickTimestamp = 0;
+var clientConnected = false;
+var timer = null;
+
 // Data
 var symbolStrategies = {};
 var quotes = {};
 var lastDataPoints = {};
-
-var lastTickTimestamp = 0;
 
 var serverOptions = {
     // secure: true,
@@ -32,18 +35,30 @@ var serverOptions = {
     // cert: fs.readFileSync('./cert.pem')
 };
 var serverOptions = ws.createServer(serverOptions, function(client) {
-    var timer = null;
+    if (clientConnected) {
+        client.sendText(JSON.stringify({
+            type: messageTypes.DISALLOWED
+        }));
+        client.close();
+        console.log('[' + new Date() + '] Disallowed second client');
 
+        // If there is already a client connected, do nothing.
+        return;
+    }
+
+    clientConnected = true;
     console.log('[' + new Date() + '] New connection');
 
     client.on('close', function(code, reason) {
-        console.log('[' + new Date() + '] Connection closed');
-
         // Stop the timer on disconnection.
         if (timer) {
             clearTimeout(timer);
             timer = null;
         }
+
+        clientConnected = false;
+
+        console.log('[' + new Date() + '] Connection closed');
     });
 
     client.on('error', function(error) {
@@ -209,10 +224,15 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         timer = setTimeout(tickTimer, 1000 - drift);
     }
 
-    // Start the timer.
-    tickTimer();
+    if (!timer) {
+        // Start the timer.
+        tickTimer();
+    }
 }).listen(port);
 
+console.log('[' + new Date() + '] Server started');
+
+// Prepare data containers.
 symbols.forEach(function(symbol) {
     var settings = require('../../settings/' + symbol + '.js');
 
@@ -226,5 +246,3 @@ symbols.forEach(function(symbol) {
         quotes[symbol][second] = [];
     });
 });
-
-console.log('[' + new Date() + '] Server started');

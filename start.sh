@@ -2,10 +2,10 @@
 
 # Start Chrome.
 if hash google-chrome 2>/dev/null; then
-    google-chrome https://ctoption.com &> /dev/null &
+    google-chrome --allow-running-insecure-content https://ctoption.com &> /dev/null &
 else
-    /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome https://ctoption.com &> /dev/null &
+    /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --allow-running-insecure-content https://ctoption.com &> /dev/null &
 fi
 
 # Start the trading service.
-forever ./src/server/app.js
+forever -f ./src/server/app.js
