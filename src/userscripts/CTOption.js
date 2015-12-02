@@ -224,7 +224,7 @@ CTOption.prototype.callTrade = function(symbol, investment) {
         return;
     }
 
-    console.log('[' + new Date() + '] CALL for ' + symbol + ' at ' + new Date() + ' for $' + investment + '.');
+    console.log('[' + new Date() + '] CALL for ' + symbol + ' at ' + new Date() + ' for $' + investment);
 
     // Ensure the controls are displayed.
     this.showSymbolControls(symbol);
