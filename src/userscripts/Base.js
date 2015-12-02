@@ -23,7 +23,8 @@ Base.prototype.getTradingMessageTypes = function() {
         PUT: 3,
         CONNECTED: 4,
         DISCONNECTED: 5,
-        DISALLOWED: 6
+        DISALLOWED: 6,
+        BALANCE: 7
     };
 };
 

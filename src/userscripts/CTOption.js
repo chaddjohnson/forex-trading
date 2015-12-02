@@ -17,10 +17,71 @@ function CTOption() {
     symbols.forEach(function(symbol) {
         self.showSymbolControls(symbol);
     });
+
+    self.initializeTimers();
 }
 
 // Create a copy of the base "class" prototype for use in this "class."
 CTOption.prototype = Object.create(Base.prototype);
+
+CTOption.prototype.initializeTimers = function() {
+    var self = this;
+
+    window.setInterval(function() {
+        // Get the current balance.
+        var balance = parseFloat(localStorage.balance);
+
+        // Get the latest balance, if available.
+        var newBalance = parseFloat($('#balance').text().replace(/[^0-9\.]/g, ''));
+
+        if (newBalance || newBalance === 0) {
+            // Update balance.
+            balance = newBalance;
+        }
+
+        if (isNaN(balance)) {
+            console.log('[' + new Date() + '] Invalid account balance')
+            return;
+        }
+
+        localStorage.balance = balance;
+
+        self.getTradingSocket().send(JSON.stringify({
+            type: self.getTradingMessageTypes().BALANCE,
+            data: balance
+        }));
+    }, 15 * 1000);  // 15 seconds
+
+    // Keep the session active.
+    window.setInterval(function() {
+        var tempWindow = window.open('https://ctoption.com');
+
+        // Close the temporary window after a bit and reload the current page.
+        window.setTimeout(function() {
+            tempWindow.close();
+        }, 30 * 1000);  // 30 seconds
+    }, 30 * 60 * 1000);  // 30 minutes
+
+    // Verify at a short interval that the assets are shown.
+    window.setInterval(function() {
+        var brokerageHour = new Date().getUTCHours() + 2;
+
+        // Don't check during non-tradable hours.
+        if (brokerageHour >= 0 && brokerageHour < 7) {
+            return;
+        }
+
+        if ($('.assets-container .asset_box').length === 0) {
+            // No assets are shown, so refresh the page.
+            window.location.reload(true);
+        }
+    }, 30 * 1000);  // 30 seconds
+
+    // Refresh the page every so often to prevent white screen issue.
+    window.setInterval(function() {
+        window.location.reload(true);
+    }, 5.25 * 60 * 60 * 1000);  // 5.25 hours
+};
 
 CTOption.prototype.piggybackDataFeed = function() {
     console.log('[' + new Date() + '] Piggybacking on data socket');
@@ -253,6 +314,22 @@ window.setTimeout(function() {
     localStorage.username = localStorage.username || prompt('Please enter your username');
     localStorage.password = localStorage.password || prompt('Please enter your password');
 
+    // Ask for the starting balance.
+    localStorage.balance = localStorage.balance || prompt('Please enter your exact current account balance').replace(/[^0-9\.]/g, '');
+
+    if (!localStorage.username) {
+        console.error('No username provided; terminating bot');
+        return;
+    }
+    if (!localStorage.password) {
+        console.error('No password provided; terminating bot');
+        return;
+    }
+    if (!localStorage.balance) {
+        console.error('No balance provided; terminating bot');
+        return;
+    }
+
     // Log in automatically if not logged in.
     if ($('.usernameval').length === 0) {
         $('#txtUsername').val(localStorage.username);
@@ -263,33 +340,3 @@ window.setTimeout(function() {
         client = new CTOption();
     }
 }, 5 * 1000);  // 5 seconds
-
-// Keep the session active.
-window.setInterval(function() {
-    var tempWindow = window.open('https://ctoption.com');
-
-    // Close the temporary window after a bit and reload the current page.
-    window.setTimeout(function() {
-        tempWindow.close();
-    }, 30 * 1000);  // 30 seconds
-}, 30 * 60 * 1000);  // 30 minutes
-
-// Verify at a short interval that the assets are shown.
-window.setInterval(function() {
-    var brokerageHour = new Date().getUTCHours() + 2;
-
-    // Don't check during non-tradable hours.
-    if (brokerageHour >= 0 && brokerageHour < 7) {
-        return;
-    }
-
-    if ($('.assets-container .asset_box').length === 0) {
-        // No assets are shown, so refresh the page.
-        window.location.reload(true);
-    }
-}, 30 * 1000);  // 30 seconds
-
-// Refresh the page every so often to prevent white screen issue.
-window.setInterval(function() {
-    window.location.reload(true);
-}, 5.25 * 60 * 60 * 1000);  // 5.25 hours

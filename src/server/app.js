@@ -10,13 +10,18 @@ var messageTypes = {
     PUT: 3,
     CONNECTED: 4,
     DISCONNECTED: 5,
-    DISALLOWED: 6
+    DISALLOWED: 6,
+    BALANCE: 7
 };
+var minimumInvestment = 5;
+var maximumInvestment = 5000;
+var investmentBalanceRatio = 100;
 
 // Settings
 // var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD', 'CADJPY', 'AUDJPY'];
 var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD', 'CADJPY'];
 var seconds = [56, 57, 58, 59, 0];
+var balance = 0;
 var investment = 5;
 var strategyFn = strategies.Reversals;
 
@@ -105,6 +110,19 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                     if (timer) {
                         clearTimeout(timer);
                         timer = null;
+                    }
+
+                    break;
+
+                case messageTypes.BALANCE:
+                    balance = message.data;
+                    investment = Math.floor(balance / investmentBalanceRatio);
+
+                    if (investment < minimumInvestment) {
+                        investment = minimumInvestment;
+                    }
+                    if (investment > maximumInvestment) {
+                        investment = maximumInvestment;
                     }
 
                     break;
@@ -206,7 +224,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                     analysis = symbolStrategies[symbol][second].analyze(dataPoint);
 
                     // If analysis sends back a positive result, then tell the client to initiate a trade.
-                    if (analysis) {
+                    if (analysis && balance >= minimumInvestment) {
                         client.sendText(JSON.stringify({
                             type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
                             data: {
