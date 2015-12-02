@@ -15,7 +15,7 @@ var messageTypes = {
 };
 var minimumInvestment = 5;
 var maximumInvestment = 5000;
-var investmentBalanceRatio = 100;
+var investmentBalanceRatio = 50;
 
 // Settings
 var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD', 'CADJPY', 'GBPUSD', 'AUDJPY', 'EURJPY', 'GBPJPY', 'GBPCAD'];
