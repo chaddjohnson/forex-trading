@@ -24,7 +24,7 @@ var balance = 0;
 var investment = 5;
 var strategyFn = strategies.Reversals;
 
-var lastTickTimestamp = 0;
+var disconnectedAtTimestamp = 0;
 var clientConnected = false;
 var timer = null;
 
@@ -53,7 +53,22 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
     clientConnected = true;
     console.log('[' + new Date() + '] New connection');
 
+    // Reset tick data if the last tick was more than 30 seconds ago.
+    if (disconnectedAtTimestamp && new Date().getTime() - disconnectedAtTimestamp > 30 * 1000) {
+        symbols.forEach(function(symbol) {
+            lastDataPoints[symbol] = {};
+
+            seconds.forEach(function(second) {
+                quotes[symbol][second] = [];
+            });
+        });
+
+        console.log('[' + new Date() + '] Tick data reset');
+    }
+
     client.on('close', function(code, reason) {
+        disconnectedAtTimestamp = new Date().getTime();
+
         // Stop the timer on disconnection.
         if (timer) {
             clearTimeout(timer);
@@ -191,19 +206,6 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         var analysis = '';
         var dataPoint;
 
-        // Reset tick data if the last tick was too long ago.
-        if (lastTickTimestamp && date.getTime() - lastTickTimestamp > 120000) {
-            console.log('[' + new Date() + '] Resetting tick data');
-
-            symbols.forEach(function(symbol) {
-                lastDataPoints[symbol] = {};
-
-                seconds.forEach(function(second) {
-                    quotes[symbol][second] = [];
-                });
-            });
-        }
-
         seconds.forEach(function(second) {
             // Enter trades only on specific seconds.
             if (currentSecond === second) {
@@ -237,7 +239,6 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
             }
         });
 
-        lastTickTimestamp = new Date().getTime();
         timer = setTimeout(tickTimer, 1000 - drift);
     }
 
