@@ -2,222 +2,222 @@ var studies = require('../src/lib/studies');
 
 module.exports = {
     configurations: [
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel500_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower200_3_195",
-                "upper": "prChannelUpper200_3_195"
-            },
-            "rsi": {
-                "oversold": 23,
-                "overbought": 77,
-                "rsi": "rsi7"
-            },
-            "sma13": true,
-            "ema50": true,
-            "ema100": true,
-            "ema200": true
-        },
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel400_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower250_4_19",
-                "upper": "prChannelUpper250_4_19"
-            },
-            "rsi": {
-                "oversold": 23,
-                "overbought": 77,
-                "rsi": "rsi7"
-            },
-            "sma13": false,
-            "ema50": true,
-            "ema100": true,
-            "ema200": false
-        },
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel850_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower250_3_215",
-                "upper": "prChannelUpper250_3_215"
-            },
-            "rsi": {
-                "oversold": 20,
-                "overbought": 80,
-                "rsi": "rsi5"
-            },
-            "sma13": true,
-            "ema50": true,
-            "ema100": false,
-            "ema200": false
-        },
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel400_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower250_3_215",
-                "upper": "prChannelUpper250_3_215"
-            },
-            "rsi": {
-                "oversold": 20,
-                "overbought": 80,
-                "rsi": "rsi5"
-            },
-            "sma13": false,
-            "ema50": true,
-            "ema100": true,
-            "ema200": false
-        },
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel300_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower250_4_19",
-                "upper": "prChannelUpper250_4_19"
-            },
-            "rsi": {
-                "oversold": 23,
-                "overbought": 77,
-                "rsi": "rsi7"
-            },
-            "sma13": true,
-            "ema50": true,
-            "ema100": true,
-            "ema200": false
-        },
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel400_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower300_4_19",
-                "upper": "prChannelUpper300_4_19"
-            },
-            "rsi": {
-                "oversold": 23,
-                "overbought": 77,
-                "rsi": "rsi7"
-            },
-            "sma13": true,
-            "ema50": false,
-            "ema100": true,
-            "ema200": false
-        },
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel850_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower300_4_215",
-                "upper": "prChannelUpper300_4_215"
-            },
-            "rsi": {
-                "oversold": 20,
-                "overbought": 80,
-                "rsi": "rsi5"
-            },
-            "sma13": true,
-            "ema50": true,
-            "ema100": true,
-            "ema200": true
-        },
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel400_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower250_3_21",
-                "upper": "prChannelUpper250_3_21"
-            },
-            "rsi": {
-                "oversold": 23,
-                "overbought": 77,
-                "rsi": "rsi7"
-            },
-            "sma13": false,
-            "ema50": true,
-            "ema100": true,
-            "ema200": false
-        },
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel400_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower200_3_20",
-                "upper": "prChannelUpper200_3_20"
-            },
-            "rsi": {
-                "oversold": 23,
-                "overbought": 77,
-                "rsi": "rsi7"
-            },
-            "sma13": true,
-            "ema50": true,
-            "ema100": true,
-            "ema200": true
-        },
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel800_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower100_4_215",
-                "upper": "prChannelUpper100_4_215"
-            },
-            "rsi": {
-                "oversold": 23,
-                "overbought": 77,
-                "rsi": "rsi7"
-            },
-            "sma13": true,
-            "ema50": false,
-            "ema100": false,
-            "ema200": false
-        },
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel850_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower250_3_215",
-                "upper": "prChannelUpper250_3_215"
-            },
-            "rsi": {
-                "oversold": 23,
-                "overbought": 77,
-                "rsi": "rsi7"
-            },
-            "sma13": true,
-            "ema50": true,
-            "ema100": true,
-            "ema200": true
-        },
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel450_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower250_3_215",
-                "upper": "prChannelUpper250_3_215"
-            },
-            "rsi": {
-                "oversold": 20,
-                "overbought": 80,
-                "rsi": "rsi5"
-            },
-            "sma13": true,
-            "ema50": false,
-            "ema100": true,
-            "ema200": true
-        }
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel500_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower200_3_195",
+                "upper": "prChannelUpper200_3_195"
+            },
+            "rsi": {
+                "oversold": 23,
+                "overbought": 77,
+                "rsi": "rsi7"
+            },
+            "sma13": true,
+            "ema50": true,
+            "ema100": true,
+            "ema200": true
+        },
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel400_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower250_4_19",
+                "upper": "prChannelUpper250_4_19"
+            },
+            "rsi": {
+                "oversold": 23,
+                "overbought": 77,
+                "rsi": "rsi7"
+            },
+            "sma13": false,
+            "ema50": true,
+            "ema100": true,
+            "ema200": false
+        },
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel850_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower250_3_215",
+                "upper": "prChannelUpper250_3_215"
+            },
+            "rsi": {
+                "oversold": 20,
+                "overbought": 80,
+                "rsi": "rsi5"
+            },
+            "sma13": true,
+            "ema50": true,
+            "ema100": false,
+            "ema200": false
+        },
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel400_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower250_3_215",
+                "upper": "prChannelUpper250_3_215"
+            },
+            "rsi": {
+                "oversold": 20,
+                "overbought": 80,
+                "rsi": "rsi5"
+            },
+            "sma13": false,
+            "ema50": true,
+            "ema100": true,
+            "ema200": false
+        },
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel300_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower250_4_19",
+                "upper": "prChannelUpper250_4_19"
+            },
+            "rsi": {
+                "oversold": 23,
+                "overbought": 77,
+                "rsi": "rsi7"
+            },
+            "sma13": true,
+            "ema50": true,
+            "ema100": true,
+            "ema200": false
+        },
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel400_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower300_4_19",
+                "upper": "prChannelUpper300_4_19"
+            },
+            "rsi": {
+                "oversold": 23,
+                "overbought": 77,
+                "rsi": "rsi7"
+            },
+            "sma13": true,
+            "ema50": false,
+            "ema100": true,
+            "ema200": false
+        },
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel850_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower300_4_215",
+                "upper": "prChannelUpper300_4_215"
+            },
+            "rsi": {
+                "oversold": 20,
+                "overbought": 80,
+                "rsi": "rsi5"
+            },
+            "sma13": true,
+            "ema50": true,
+            "ema100": true,
+            "ema200": true
+        },
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel400_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower250_3_21",
+                "upper": "prChannelUpper250_3_21"
+            },
+            "rsi": {
+                "oversold": 23,
+                "overbought": 77,
+                "rsi": "rsi7"
+            },
+            "sma13": false,
+            "ema50": true,
+            "ema100": true,
+            "ema200": false
+        },
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel400_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower200_3_20",
+                "upper": "prChannelUpper200_3_20"
+            },
+            "rsi": {
+                "oversold": 23,
+                "overbought": 77,
+                "rsi": "rsi7"
+            },
+            "sma13": true,
+            "ema50": true,
+            "ema100": true,
+            "ema200": true
+        },
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel800_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower100_4_215",
+                "upper": "prChannelUpper100_4_215"
+            },
+            "rsi": {
+                "oversold": 23,
+                "overbought": 77,
+                "rsi": "rsi7"
+            },
+            "sma13": true,
+            "ema50": false,
+            "ema100": false,
+            "ema200": false
+        },
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel850_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower250_3_215",
+                "upper": "prChannelUpper250_3_215"
+            },
+            "rsi": {
+                "oversold": 23,
+                "overbought": 77,
+                "rsi": "rsi7"
+            },
+            "sma13": true,
+            "ema50": true,
+            "ema100": true,
+            "ema200": true
+        },
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel450_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower250_3_215",
+                "upper": "prChannelUpper250_3_215"
+            },
+            "rsi": {
+                "oversold": 20,
+                "overbought": 80,
+                "rsi": "rsi5"
+            },
+            "sma13": true,
+            "ema50": false,
+            "ema100": true,
+            "ema200": true
+        }
     ],
     studies: [
         {study: studies.Ema, inputs: {length: 200}, outputMap: {ema: 'ema200'}},

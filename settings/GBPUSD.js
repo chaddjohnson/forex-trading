@@ -2,42 +2,42 @@ var studies = require('../src/lib/studies');
 
 module.exports = {
     configurations: [
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel800_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower200_4_20",
-                "upper": "prChannelUpper200_4_20"
-            },
-            "rsi": {
-                "oversold": 20,
-                "overbought": 80,
-                "rsi": "rsi7"
-            },
-            "sma13": true,
-            "ema50": true,
-            "ema100": false,
-            "ema200": false
-        },
-        {
-            "trendPrChannel": {
-                "regression": "trendPrChannel800_2"
-            },
-            "prChannel": {
-                "lower": "prChannelLower200_4_20",
-                "upper": "prChannelUpper200_4_20"
-            },
-            "rsi": {
-                "oversold": 20,
-                "overbought": 80,
-                "rsi": "rsi7"
-            },
-            "sma13": false,
-            "ema50": false,
-            "ema100": true,
-            "ema200": true
-        }
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel800_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower200_4_20",
+                "upper": "prChannelUpper200_4_20"
+            },
+            "rsi": {
+                "oversold": 20,
+                "overbought": 80,
+                "rsi": "rsi7"
+            },
+            "sma13": true,
+            "ema50": true,
+            "ema100": false,
+            "ema200": false
+        },
+        {
+            "trendPrChannel": {
+                "regression": "trendPrChannel800_2"
+            },
+            "prChannel": {
+                "lower": "prChannelLower200_4_20",
+                "upper": "prChannelUpper200_4_20"
+            },
+            "rsi": {
+                "oversold": 20,
+                "overbought": 80,
+                "rsi": "rsi7"
+            },
+            "sma13": false,
+            "ema50": false,
+            "ema100": true,
+            "ema200": true
+        }
     ],
     studies: [
         {study: studies.Ema, inputs: {length: 200}, outputMap: {ema: 'ema200'}},
