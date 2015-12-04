@@ -44,7 +44,6 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
             type: messageTypes.DISALLOWED
         }));
         client.close();
-        console.log('[' + new Date() + '] Disallowed second client');
 
         // If there is already a client connected, do nothing.
         return;
