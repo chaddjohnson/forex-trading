@@ -63,10 +63,33 @@ CTOption.prototype.initializeTimers = function() {
 
     // Verify at a short interval that the assets are shown.
     window.setInterval(function() {
-        var brokerageHour = new Date().getUTCHours() + 2;
+        var date = new Date();
+        var brokerageHour = date.getUTCHours() + 2;
+        var brokerageDay = date.getUTCDate();
+        var brokerageMinute = date.getUTCMinutes();
 
         // Don't check during non-tradable hours.
         if (brokerageHour >= 0 && brokerageHour < 7) {
+            return;
+        }
+
+        // Don't check the last five minutes of the trading day.
+        if (brokerageHour === 23 && brokerageMinute >= 54) {
+            return;
+        }
+
+        // Don't check the last couple hours on Fridays.
+        if (brokerageDay === 5 && brokerageHour >= 22) {
+            return;
+        }
+
+        // Don't check the last five minutes of the trading day on Fridays.
+        if (brokerageDay === 5 && brokerageHour === 21 && brokerageMinute >= 54) {
+            return;
+        }
+
+        // Don't check on weekends.
+        if (brokerageDay === 6 || brokerageDay === 7) {
             return;
         }
 
