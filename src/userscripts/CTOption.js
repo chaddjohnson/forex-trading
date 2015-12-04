@@ -4,7 +4,8 @@ function CTOption() {
     this.constructor = CTOption;
 
     var self = this;
-    var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD', 'CADJPY', 'GBPUSD', 'AUDJPY', 'EURJPY', 'GBPJPY', 'GBPCAD'];
+    // var symbols = ['AUDNZD', 'NZDUSD', 'AUDCAD', 'AUDUSD', 'USDCAD', 'USDCHF', 'CADJPY', 'AUDJPY', 'GBPJPY', 'GBPCAD'];
+    var symbols = ['AUDNZD', 'NZDUSD', 'AUDCAD', 'AUDUSD', 'USDCAD', 'USDCHF', 'CADJPY', 'AUDJPY', 'GBPCAD'];
 
     Base.call(self, symbols);
 

@@ -18,7 +18,8 @@ var maximumInvestment = 5000;
 var investmentBalanceRatio = 50;
 
 // Settings
-var symbols = ['EURGBP', 'AUDNZD', 'NZDUSD', 'AUDCAD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'EURUSD', 'CADJPY', 'GBPUSD', 'AUDJPY', 'EURJPY', 'GBPJPY', 'GBPCAD'];
+// var symbols = ['AUDNZD', 'NZDUSD', 'AUDCAD', 'AUDUSD', 'USDCAD', 'USDCHF', 'CADJPY', 'AUDJPY', 'GBPJPY', 'GBPCAD'];
+var symbols = ['AUDNZD', 'NZDUSD', 'AUDCAD', 'AUDUSD', 'USDCAD', 'USDCHF', 'CADJPY', 'AUDJPY', 'GBPCAD'];
 var seconds = [59];  // [56, 57, 58, 59, 0];
 var balance = 0;
 var investment = 5;
