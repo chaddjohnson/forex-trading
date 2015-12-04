@@ -65,7 +65,7 @@ CTOption.prototype.initializeTimers = function() {
     window.setInterval(function() {
         var date = new Date();
         var brokerageHour = date.getUTCHours() + 2;
-        var brokerageDay = date.getUTCDate();
+        var brokerageDay = date.getUTCDay();
         var brokerageMinute = date.getUTCMinutes();
 
         // Don't check during non-tradable hours.
