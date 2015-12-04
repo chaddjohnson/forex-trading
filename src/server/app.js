@@ -225,15 +225,21 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                     analysis = symbolStrategies[symbol][second].analyze(dataPoint);
 
                     // If analysis sends back a positive result, then tell the client to initiate a trade.
-                    if (analysis && balance >= minimumInvestment) {
-                        client.sendText(JSON.stringify({
-                            type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
-                            data: {
-                                symbol: symbol,
-                                investment: investment
-                            }
-                        }));
+                    if (analysis) {
                         console.log('[' + new Date() + '] ' + analysis + ' for ' + symbol + ' for $' + investment);
+
+                        if (balance >= minimumInvestment) {
+                            client.sendText(JSON.stringify({
+                                type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
+                                data: {
+                                    symbol: symbol,
+                                    investment: investment
+                                }
+                            }));
+                        }
+                        else {
+                            console.error('[' + new Date() + '] Error trading: Insufficient balance');
+                        }
                     }
                 });
             }
