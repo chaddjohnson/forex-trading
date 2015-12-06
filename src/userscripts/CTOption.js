@@ -179,7 +179,7 @@ CTOption.prototype.piggybackDataFeed = function() {
             }
         }
         catch (error) {
-            //console.error(new Date() + ' DATA ERROR: ' + (error.message || error), event.data);
+            //console.error('[' + new Date() + '] DATA ERROR: ' + (error.message || error), event.data);
         }
 
         // Call the original callback.
@@ -187,7 +187,7 @@ CTOption.prototype.piggybackDataFeed = function() {
     };
 
     dataSocket.onclose = function() {
-        console.error(new Date() + ' Data socket closed');
+        console.error('[' + new Date() + '] Data socket closed');
 
         // Let the trading service know the data socket has disconnected.
         self.getTradingSocket().send(JSON.stringify({
@@ -198,7 +198,7 @@ CTOption.prototype.piggybackDataFeed = function() {
     };
 
     dataSocket.onerror = function(error) {
-        console.error(new Date() + ' ERROR: ' + (error.message || error));
+        console.error('[' + new Date() + '] ERROR: ' + (error.message || error));
         originalOnError();
     };
 
@@ -225,10 +225,10 @@ CTOption.prototype.showSymbolControls = function(symbol) {
 CTOption.prototype.callTrade = function(symbol, investment) {
     // Ensure necessary parameters are present.
     if (!symbol) {
-        console.error(new Date() + ' No symbol provided');
+        console.error('[' + new Date() + '] No symbol provided');
     }
     if (!investment) {
-        console.error(new Date() + ' No investment provided');
+        console.error('[' + new Date() + '] No investment provided');
     }
 
     // Ensure UI for symbol is present.
@@ -265,10 +265,10 @@ CTOption.prototype.callTrade = function(symbol, investment) {
 CTOption.prototype.putTrade = function(symbol, investment) {
     // Ensure necessary parameters are present.
     if (!symbol) {
-        console.error(new Date() + ' No symbol provided');
+        console.error('[' + new Date() + '] No symbol provided');
     }
     if (!investment) {
-        console.error(new Date() + ' No investment provided');
+        console.error('[' + new Date() + '] No investment provided');
     }
 
     // Ensure UI for symbol is present.
@@ -340,15 +340,15 @@ window.setTimeout(function() {
     localStorage.balance = localStorage.balance || prompt('Please enter your exact current account balance').replace(/[^0-9\.]/g, '');
 
     if (!localStorage.username) {
-        console.error('No username provided; terminating bot');
+        console.error('[' + new Date() + '] No username provided; terminating bot');
         return;
     }
     if (!localStorage.password) {
-        console.error('No password provided; terminating bot');
+        console.error('[' + new Date() + '] No password provided; terminating bot');
         return;
     }
     if (!localStorage.balance) {
-        console.error('No balance provided; terminating bot');
+        console.error('[' + new Date() + '] No balance provided; terminating bot');
         return;
     }
 
