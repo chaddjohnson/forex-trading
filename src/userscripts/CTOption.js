@@ -89,7 +89,7 @@ CTOption.prototype.initializeTimers = function() {
         }
 
         // Don't check on weekends.
-        if (brokerageDay === 6 || brokerageDay === 7) {
+        if (brokerageDay === 6 || brokerageDay === 0) {
             return;
         }
 
