@@ -34,6 +34,7 @@ contents of `src/userscripts/build/ctoption.js` into a new Tampermonkey script. 
 icon in the Tampermonkey dashboard means its enabled). Nothing else is required; when visiting ctoption.com,
 the userscript will automatically run.
 8. In the "Pop-ups" section of the Chrome Content settings page, add an allowed exception for "https://[*.]ctoption.com:443".
+9. In the "On startup" section of the Chrome Settings page, select "Open the New Tab page."
 
 ### Usage
 

@@ -1,6 +1,7 @@
 var fs = require('fs');
 var _ = require('lodash');
 var ws = require('nodejs-websocket');
+var childProcess = require('child_process');
 var strategies = require('../lib/strategies');
 
 var port = 8080;
@@ -27,6 +28,8 @@ var strategyFn = strategies.Reversals;
 var disconnectedAtTimestamp = 0;
 var clientConnected = false;
 var timer = null;
+var botProcess = null;
+var botRestartTimeout = 0;
 
 // Data
 var symbolStrategies = {};
@@ -49,6 +52,9 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         return;
     }
 
+    // Prevent bot restart now that reconnection has occurred.
+    clearTimeout(botRestartTimeout);
+
     clientConnected = true;
     console.log('[' + new Date() + '] New connection');
 
@@ -61,7 +67,6 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                 quotes[symbol][second] = [];
             });
         });
-
         console.log('[' + new Date() + '] Tick data reset');
     }
 
@@ -77,6 +82,11 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         clientConnected = false;
 
         console.log('[' + new Date() + '] Connection closed');
+
+        // Restart the bot if reconnection doesn't occur in a timely manner.
+        botRestartTimeout = setTimeout(function() {
+            restartBot();
+        }, 30 * 1000);  // 30 seconds
     });
 
     client.on('error', function(error) {
@@ -269,3 +279,27 @@ symbols.forEach(function(symbol) {
         quotes[symbol][second] = [];
     });
 });
+
+function restartBot() {
+    // Try Mac OS path first.
+    var chromePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+
+    if (botProcess) {
+        // Restart the trading bot in case the web page crashed.
+        console.log('[' + new Date() + '] Restarting bot');
+        botProcess.kill();
+    }
+
+    try {
+        fs.statSync(chromePath);
+    }
+    catch (error) {
+        // Not on Mac OS, so try Linux path.
+        chromePath = 'google-chrome';
+    }
+
+    botProcess = childProcess.spawn(chromePath, ['--allow-running-insecure-content', 'https://ctoption.com']);
+    console.log('[' + new Date() + '] Bot started');
+}
+
+restartBot();
