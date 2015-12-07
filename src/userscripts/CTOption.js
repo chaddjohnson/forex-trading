@@ -74,12 +74,12 @@ CTOption.prototype.initializeTimers = function() {
         }
 
         // Don't check the last five minutes of the trading day.
-        if (brokerageHour === 23 && brokerageMinute >= 54 && brokerageMinute <= 29) {
+        if (brokerageHour === 23 && brokerageMinute >= 54 && brokerageMinute <= 59) {
             return;
         }
 
         // Don't check prior to the first five minutes of the trading day.
-        if (brokerageHour === 7 && brokerageMinute >= 24 && brokerageMinute <= 29) {
+        if (brokerageHour === 7 && brokerageMinute >= 24 && brokerageMinute <= 59) {
             return;
         }
 
