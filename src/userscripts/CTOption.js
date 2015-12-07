@@ -103,11 +103,6 @@ CTOption.prototype.initializeTimers = function() {
             window.location.reload(true);
         }
     }, 30 * 1000);  // 30 seconds
-
-    // Refresh the page every so often to prevent white screen issue.
-    window.setInterval(function() {
-        window.location.reload(true);
-    }, 5.25 * 60 * 60 * 1000);  // 5.25 hours
 };
 
 CTOption.prototype.piggybackDataFeed = function() {
