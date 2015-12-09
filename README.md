@@ -35,6 +35,7 @@ icon in the Tampermonkey dashboard means its enabled). Nothing else is required;
 the userscript will automatically run.
 8. In the "Pop-ups" section of the Chrome Content settings page, add an allowed exception for "https://[*.]ctoption.com:443".
 9. In the "On startup" section of the Chrome Settings page, select "Open the New Tab page."
+10. Ensure your computer's time is exactly correct to the second. Make it sync with a time server.
 
 ### Usage
 
