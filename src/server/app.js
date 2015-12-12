@@ -34,7 +34,6 @@ var botRestartTimeout = 0;
 // Data
 var symbolStrategies = {};
 var quotes = {};
-var lastDataPoints = {};
 
 var serverOptions = {
     // secure: true,
@@ -61,8 +60,6 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
     // Reset tick data if the last tick was more than 30 seconds ago.
     if (disconnectedAtTimestamp && new Date().getTime() - disconnectedAtTimestamp > 30 * 1000) {
         symbols.forEach(function(symbol) {
-            lastDataPoints[symbol] = {};
-
             seconds.forEach(function(second) {
                 quotes[symbol][second] = [];
             });
@@ -158,34 +155,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
 
     function calculateMinuteData(symbol, second) {
         var symbolQuotes = quotes[symbol][second];
-        var lastDataPoint = lastDataPoints[symbol][second];
-        var firstQuoteTimestamp;
         var dataPoint = null;
-        var dataPointTimestamp = new Date().getTime();
-
-        if (lastDataPoint) {
-            firstQuoteTimestamp = lastDataPoint.timestamp + (60 * 1000);
-            firstQuoteTimestamp = firstQuoteTimestamp - (new Date(firstQuoteTimestamp).getSeconds() * 1000);
-
-            // Use the first second of the minute for the data point timestamp.
-            dataPointTimestamp = firstQuoteTimestamp + (second * 1000);
-        }
-
-        // If there are no quotes for the minute, then create one using the previous data point.
-        if (symbolQuotes.length === 0 && lastDataPoint) {
-            symbolQuotes.push({
-                symbol: symbol,
-                price: lastDataPoint.close,
-                timestamp: firstQuoteTimestamp
-            });
-
-            // Log data to a file.
-            fs.appendFileSync('./data.csv', JSON.stringify({
-                symbol: symbol,
-                price: lastDataPoint.close,
-                timestamp: firstQuoteTimestamp
-            }) + '\n');
-        }
 
         // Nothing can be done if there still are no quotes.
         if (symbolQuotes.length === 0) {
@@ -199,11 +169,10 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
             low: _.min(symbolQuotes, 'price').price,
             open: _.first(symbolQuotes).price,
             close: _.last(symbolQuotes).price,
-            timestamp: dataPointTimestamp
+            timestamp: new Date().getTime()
         };
 
         quotes[symbol][second] = [];
-        lastDataPoints[symbol][second] = dataPoint;
 
         return dataPoint;
     }
@@ -271,7 +240,6 @@ symbols.forEach(function(symbol) {
 
     symbolStrategies[symbol] = {};
     quotes[symbol] = {};
-    lastDataPoints[symbol] = {};
 
     // Instantiate a new strategy instance and quote data for the symbol for each second.
     seconds.forEach(function(second) {

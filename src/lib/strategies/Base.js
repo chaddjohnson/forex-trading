@@ -27,14 +27,6 @@ Base.prototype.tick = function(dataPoint) {
     var self = this;
     var i = 0;
 
-    // If there is a gap in the data, reset the cumulative data.
-    if (self.tickPreviousDataPoint && (dataPoint.timestamp - self.tickPreviousDataPoint.timestamp) > 65 * 1000) {
-        self.cumulativeData = [];
-        self.cumulativeDataCount = 0;
-
-        console.log('[' + new Date() + '] Strategy data reset');
-    }
-
     // Add the data point to the cumulative data.
     self.cumulativeData.push(dataPoint);
     self.cumulativeDataCount++;
@@ -61,8 +53,6 @@ Base.prototype.tick = function(dataPoint) {
             }
         }
     });
-
-    self.tickPreviousDataPoint = dataPoint;
 
     // Remove unused data every so often.
     if (self.cumulativeDataCount >= 1500) {
