@@ -23,6 +23,13 @@ Base.prototype.getSettings = function() {
     return this.settings;
 };
 
+Base.prototype.reset = function() {
+    this.cumulativeData = [];
+    this.cumulativeDataCount = 0;
+
+    console.log('[' + new Date() + '] Strategy data reset');
+};
+
 Base.prototype.tick = function(dataPoint) {
     var self = this;
     var i = 0;

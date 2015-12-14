@@ -62,6 +62,9 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         symbols.forEach(function(symbol) {
             seconds.forEach(function(second) {
                 quotes[symbol][second] = [];
+
+                // Reset data for strategies.
+                symbolStrategies[symbol][second].reset();
             });
         });
         console.log('[' + new Date() + '] Tick data reset');
