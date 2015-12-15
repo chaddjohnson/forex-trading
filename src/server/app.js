@@ -59,15 +59,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
 
     // Reset tick data if the last tick was more than 30 seconds ago.
     if (disconnectedAtTimestamp && new Date().getTime() - disconnectedAtTimestamp > 30 * 1000) {
-        symbols.forEach(function(symbol) {
-            seconds.forEach(function(second) {
-                quotes[symbol][second] = [];
-
-                // Reset data for strategies.
-                symbolStrategies[symbol][second].reset();
-            });
-        });
-        console.log('[' + new Date() + '] Tick data reset');
+        resetData();
     }
 
     client.on('close', function(code, reason) {
@@ -182,10 +174,17 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
 
     function tickTimer() {
         var date = new Date();
+        var utcDay = date.getUTCDay();
+        var utcHour = date.getUTCHours();
         var drift = date.getMilliseconds();
         var currentSecond = date.getSeconds();
         var analysis = '';
         var dataPoint;
+
+        // Reset data each Saturday morning.
+        if (utcDay === 6 && utcHour === 6 && date.getMinutes() === 0 && date.getSeconds() === 0) {
+            resetData();
+        }
 
         seconds.forEach(function(second) {
             // Enter trades only on specific seconds.
@@ -250,6 +249,18 @@ symbols.forEach(function(symbol) {
         quotes[symbol][second] = [];
     });
 });
+
+function resetData() {
+    symbols.forEach(function(symbol) {
+        seconds.forEach(function(second) {
+            quotes[symbol][second] = [];
+
+            // Reset data for strategies.
+            symbolStrategies[symbol][second].reset();
+        });
+    });
+    console.log('[' + new Date() + '] Tick data reset');
+}
 
 function restartBot() {
     // Try Mac OS path first.

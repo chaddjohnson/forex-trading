@@ -13,6 +13,11 @@ Base.prototype.setData = function(data) {
     this.dataPointCount = data.length;
 };
 
+Base.prototype.reset = function() {
+    this.data = [];
+    this.dataPointCount = 0;
+};
+
 Base.prototype.getInput = function(key) {
     return this.inputs[key];
 };

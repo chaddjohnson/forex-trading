@@ -27,6 +27,11 @@ Base.prototype.reset = function() {
     this.cumulativeData = [];
     this.cumulativeDataCount = 0;
 
+    // Reset data for studies as well.
+    this.studies.forEach(function(study) {
+        study.reset();
+    });
+
     console.log('[' + new Date() + '] Strategy data reset');
 };
 

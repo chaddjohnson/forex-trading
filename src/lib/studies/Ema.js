@@ -12,6 +12,12 @@ function Ema(inputs, outputMap) {
 // Create a copy of the Base "class" prototype for use in this "class."
 Ema.prototype = Object.create(Base.prototype);
 
+Ema.prototype.reset = function() {
+    Base.prototype.reset.call(this);
+
+    this.previousEma = null;
+};
+
 Ema.prototype.tick = function() {
     var lastDataPoint = this.getLast();
     var K = 0.0;

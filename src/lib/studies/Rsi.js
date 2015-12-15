@@ -40,6 +40,13 @@ Rsi.prototype.calculateInitialAverageLoss = function(initialDataPoint, dataSegme
     }, 0) / this.dataSegmentLength;
 };
 
+Rsi.prototype.reset = function() {
+    Base.prototype.reset.call(this);
+
+    this.previousAverageGain = null;
+    this.previousAverageLoss = null;
+};
+
 Rsi.prototype.tick = function() {
     var dataSegment = this.getDataSegment(this.getInput('length'));
     var previousDataPoint = this.getPrevious();
