@@ -26,29 +26,12 @@ CTOption.prototype = Object.create(Base.prototype);
 CTOption.prototype.initializeTimers = function() {
     var self = this;
 
+    // Keep the bot informed of the account balance.
     window.setInterval(function() {
-        // Get the current balance.
-        var balance = parseFloat(localStorage.balance);
-
         // Get the latest balance, if available.
         var newBalance = parseFloat($('#balance').text().replace(/[^0-9\.]/g, ''));
 
-        if (newBalance || newBalance === 0) {
-            // Update balance.
-            balance = newBalance;
-        }
-
-        if (isNaN(balance)) {
-            console.log('[' + new Date() + '] Invalid account balance')
-            return;
-        }
-
-        localStorage.balance = balance;
-
-        self.getTradingSocket().send(JSON.stringify({
-            type: self.getTradingMessageTypes().BALANCE,
-            data: balance
-        }));
+        self.updateBalance(newBalance);
     }, 15 * 1000);  // 15 seconds
 
     // Keep the session active.
@@ -330,8 +313,6 @@ CTOption.prototype.initiateTrade = function(symbol) {
 };
 
 window.setTimeout(function() {
-    var client;
-
     // Cache credentials so the bot can automatically log in again if logged out.
     localStorage.username = localStorage.username || prompt('Please enter your username');
     localStorage.password = localStorage.password || prompt('Please enter your password');
@@ -359,6 +340,7 @@ window.setTimeout(function() {
         $('#btnformLogin').click();
     }
     else {
-        client = new CTOption();
+        // Instantiate a new client, and make it available globally.
+        window.bot = new CTOption();
     }
 }, 5 * 1000);  // 5 seconds

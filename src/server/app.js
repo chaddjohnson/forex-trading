@@ -11,18 +11,12 @@ var messageTypes = {
     PUT: 3,
     CONNECTED: 4,
     DISCONNECTED: 5,
-    DISALLOWED: 6,
-    BALANCE: 7
+    DISALLOWED: 6
 };
-var minimumInvestment = 5;
-var maximumInvestment = 5000;
-var investmentBalanceRatio = 50;
 
 // Settings
 var symbols = ['AUDCAD', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'CADJPY', 'EURGBP', 'EURUSD', 'GBPJPY', 'NZDUSD', 'USDCAD', 'USDCHF', 'USDJPY'];
 var seconds = [59];  // [56, 57, 58, 59, 0];
-var balance = 0;
-var investment = 5;
 var strategyFn = strategies.Reversals;
 
 var disconnectedAtTimestamp = 0;
@@ -128,19 +122,6 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                     }
 
                     break;
-
-                case messageTypes.BALANCE:
-                    balance = message.data;
-                    investment = Math.floor(balance / investmentBalanceRatio);
-
-                    if (investment < minimumInvestment) {
-                        investment = minimumInvestment;
-                    }
-                    if (investment > maximumInvestment) {
-                        investment = maximumInvestment;
-                    }
-
-                    break;
             }
         }
         catch (error) {
@@ -206,20 +187,12 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
 
                     // If analysis sends back a positive result, then tell the client to initiate a trade.
                     if (analysis) {
-                        console.log('[' + new Date() + '] ' + analysis + ' for ' + symbol + ' for $' + investment);
+                        console.log('[' + new Date() + '] ' + analysis + ' for ' + symbol);
 
-                        if (balance >= minimumInvestment) {
-                            client.sendText(JSON.stringify({
-                                type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
-                                data: {
-                                    symbol: symbol,
-                                    investment: investment
-                                }
-                            }));
-                        }
-                        else {
-                            console.error('[' + new Date() + '] Error trading: Insufficient balance');
-                        }
+                        client.sendText(JSON.stringify({
+                            type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
+                            data: {symbol: symbol}
+                        }));
                     }
                 });
             }

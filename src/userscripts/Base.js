@@ -2,6 +2,10 @@ function Base(symbols) {
     var self = this;
 
     self.symbols = symbols;
+    self.minimumInvestment = 5;
+    self.maximumInvestment = 5000;
+    self.investmentBalancePercentage = 0.02;
+    self.tradableSeconds = [59];  // [56, 57, 58, 59, 0];
 
     self.initializeTradingSocket();
 
@@ -23,8 +27,7 @@ Base.prototype.getTradingMessageTypes = function() {
         PUT: 3,
         CONNECTED: 4,
         DISCONNECTED: 5,
-        DISALLOWED: 6,
-        BALANCE: 7
+        DISALLOWED: 6
     };
 };
 
@@ -34,7 +37,7 @@ Base.prototype.getSymbols = function() {
 
 Base.prototype.getTradingSocket = function() {
     return this.tradingSocket;
-}
+};
 
 Base.prototype.initializeTradingSocket = function() {
     var self = this;
@@ -49,19 +52,59 @@ Base.prototype.initializeTradingSocket = function() {
     self.tradingSocket.onmessage = function(event) {
         try {
             var message = JSON.parse(event.data);
+            var second = new Date().getSeconds();
+            var investment = 0;
 
             switch (message.type) {
                 case tradingMessageTypes.CALL:
-                    if (!localStorage.stopTrading && self.symbols.indexOf(message.data.symbol) > -1) {
-                        self.callTrade(message.data.symbol, message.data.investment);
+                    // Prevent trading on emergency stop.
+                    if (localStorage.stopTrading) {
+                        return;
                     }
+                    // Only trade whitelisted symbols.
+                    if (self.symbols.indexOf(message.data.symbol) === -1) {
+                        return;
+                    }
+                    // Only trade whitelisted seconds.
+                    if (self.tradableSeconds.indexOf(second) === -1) {
+                        return;
+                    }
+
+                    investment = self.getInvestment();
+
+                    // Ensure there is sufficient balance to trade.
+                    if (self.balance < investment) {
+                        console.error('[' + new Date() + '] Insufficient balance');
+                        return 0;
+                    }
+
+                    self.callTrade(message.data.symbol, investment);
 
                     break;
 
                 case tradingMessageTypes.PUT:
-                    if (!localStorage.stopTrading && self.symbols.indexOf(message.data.symbol) > -1) {
-                        self.putTrade(message.data.symbol, message.data.investment);
+                    // Prevent trading on emergency stop.
+                    if (localStorage.stopTrading) {
+                        return;
                     }
+                    // Only trade whitelisted symbols.
+                    if (self.symbols.indexOf(message.data.symbol) === -1) {
+                        return;
+                    }
+                    // Only trade whitelisted seconds.
+                    if (self.tradableSeconds.indexOf(second) === -1) {
+                        return;
+                    }
+
+                    investment = self.getInvestment();
+
+                    // Ensure there is sufficient balance to trade.
+                    if (self.balance < investment) {
+                        console.error('[' + new Date() + '] Insufficient balance');
+                        return 0;
+                    }
+
+                    self.putTrade(message.data.symbol, investment);
 
                     break;
 
@@ -121,6 +164,58 @@ Base.prototype.setTradeInvestment = function(symbol, investment) {
 
 Base.prototype.initiateTrade = function(symbol) {
     throw 'initiateTrade() not implemented';
+};
+
+Base.prototype.updateBalance = function(newBalance) {
+    // Get the current balance.
+    var balance = parseFloat(localStorage.balance);
+
+    if (newBalance || newBalance === 0) {
+        // Update balance.
+        balance = newBalance;
+    }
+
+    if (isNaN(balance)) {
+        console.log('[' + new Date() + '] Invalid account balance')
+        return;
+    }
+
+    localStorage.balance = balance;
+    this.balance = balance;
+};
+
+Base.prototype.getInvestment = function() {
+    if (!this.balance) {
+        // Default to small trades if no account balance is available.
+        return 5;
+    }
+
+    investment = Math.floor(this.balance * this.investmentBalancePercentage);
+
+    // Enforce minimum trade size.
+    if (investment < this.minimumInvestment) {
+        investment = this.minimumInvestment;
+    }
+
+    // Enforce maximum trade size.
+    if (investment > this.maximumInvestment) {
+        investment = this.maximumInvestment;
+    }
+
+    // Disallow trading more than 4% of the account balance.
+    if (investment > this.balance * 0.04) {
+        investment = this.balance * 0.04;
+    }
+
+    return investment;
+};
+
+Base.prototype.setTradableSeconds = function(tradableSeconds) {
+    this.tradableSeconds = tradableSeconds;
+};
+
+Base.prototype.setInvestmentBalancePercentage = function(investmentBalancePercentage) {
+    this.investmentBalancePercentage = investmentBalancePercentage;
 };
 
 module.exports = Base;
