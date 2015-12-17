@@ -75,7 +75,7 @@ Base.prototype.initializeTradingSocket = function() {
                     // Ensure there is sufficient balance to trade.
                     if (self.balance < investment) {
                         console.error('[' + new Date() + '] Insufficient balance');
-                        return 0;
+                        return;
                     }
 
                     self.callTrade(message.data.symbol, investment);
@@ -101,7 +101,7 @@ Base.prototype.initializeTradingSocket = function() {
                     // Ensure there is sufficient balance to trade.
                     if (self.balance < investment) {
                         console.error('[' + new Date() + '] Insufficient balance');
-                        return 0;
+                        return;
                     }
 
                     self.putTrade(message.data.symbol, investment);
