@@ -162,8 +162,8 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         var analysis = '';
         var dataPoint;
 
-        // Reset data each Saturday morning.
-        if (utcDay === 6 && utcHour === 6 && date.getMinutes() === 0 && date.getSeconds() === 0) {
+        // Reset data each Sunday morning.
+        if (utcDay === 0 && utcHour === 6 && date.getMinutes() === 0 && date.getSeconds() === 0) {
             resetData();
         }
 
