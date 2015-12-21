@@ -92,12 +92,12 @@ Reversals.prototype.analyze = function(dataPoint) {
         if (configuration.prChannel) {
             if (dataPoint[configuration.prChannel.upper] && dataPoint[configuration.prChannel.lower]) {
                 // Determine if the upper regression bound was not breached by the high price.
-                if (putThisConfiguration && (!dataPoint[configuration.prChannel.upper] || dataPoint.high <= dataPoint[configuration.prChannel.upper] || dataPoint.close > dataPoint[configuration.prChannel.upper2])) {
+                if (putThisConfiguration && (!dataPoint[configuration.prChannel.upper] || dataPoint.high <= dataPoint[configuration.prChannel.upper])) {
                     putThisConfiguration = false;
                 }
 
                 // Determine if the lower regression bound was not breached by the low price.
-                if (callThisConfiguration && (!dataPoint[configuration.prChannel.lower] || dataPoint.low >= dataPoint[configuration.prChannel.lower] || dataPoint.close < dataPoint[configuration.prChannel.lower2])) {
+                if (callThisConfiguration && (!dataPoint[configuration.prChannel.lower] || dataPoint.low >= dataPoint[configuration.prChannel.lower])) {
                     callThisConfiguration = false;
                 }
             }
