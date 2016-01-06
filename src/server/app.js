@@ -16,6 +16,7 @@ var messageTypes = {
 
 // Settings
 var symbols = ['AUDCAD', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'CADJPY', 'EURGBP', 'EURUSD', 'GBPJPY', 'NZDUSD', 'USDCAD', 'USDCHF', 'USDJPY'];
+var tradableSymbols = ['AUDJPY'];
 var seconds = [57, 58, 59];  // [56, 57, 58, 59, 0];
 var strategyFn = strategies.Reversals;
 
@@ -182,17 +183,20 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                     // Log data to a file.
                     fs.appendFileSync('./data.csv', JSON.stringify(dataPoint) + '\n');
 
-                    // Analyze the data to date.
-                    analysis = symbolStrategies[symbol][second].analyze(dataPoint);
+                    // Only trade if the symbol is whitelisted as able to be traded.
+                    if (tradableSymbols.indexOf(symbol) > -1) {
+                        // Analyze the data to date.
+                        analysis = symbolStrategies[symbol][second].analyze(dataPoint);
 
-                    // If analysis sends back a positive result, then tell the client to initiate a trade.
-                    if (analysis) {
-                        console.log('[' + new Date() + '] ' + analysis + ' for ' + symbol);
+                        // If analysis sends back a positive result, then tell the client to initiate a trade.
+                        if (analysis) {
+                            console.log('[' + new Date() + '] ' + analysis + ' for ' + symbol);
 
-                        client.sendText(JSON.stringify({
-                            type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
-                            data: {symbol: symbol}
-                        }));
+                            client.sendText(JSON.stringify({
+                                type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
+                                data: {symbol: symbol}
+                            }));
+                        }
                     }
                 });
             }
