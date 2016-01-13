@@ -59,7 +59,7 @@ Base.prototype.initializeTradingSocket = function() {
             switch (message.type) {
                 case tradingMessageTypes.CALL:
                     // Prevent trading on emergency stop.
-                    if (localStorage.stopTrading) {
+                    if ($.cookie('stopTrading')) {
                         return;
                     }
                     // Only trade whitelisted symbols.
@@ -85,7 +85,7 @@ Base.prototype.initializeTradingSocket = function() {
 
                 case tradingMessageTypes.PUT:
                     // Prevent trading on emergency stop.
-                    if (localStorage.stopTrading) {
+                    if ($.cookie('stopTrading')) {
                         return;
                     }
                     // Only trade whitelisted symbols.
@@ -173,7 +173,7 @@ Base.prototype.getBalance = function() {
 
 Base.prototype.updateStartingBalance = function(newBalance) {
     // Get the current balance.
-    var balance = parseFloat(localStorage.startingBalance);
+    var balance = parseFloat($.cookie('startingBalance'));
 
     if (newBalance || newBalance === 0) {
         // Update balance.
@@ -185,8 +185,8 @@ Base.prototype.updateStartingBalance = function(newBalance) {
         return;
     }
 
-    localStorage.startingBalance = balance;
-    localStorage.startingBalanceLastUpdatedAt = new Date().getTime();
+    $.cookie('startingBalance', balance, { expires: 365 * 10, path: '/' });
+    $.cookie('startingBalanceLastUpdatedAt', new Date().getTime(), { expires: 365 * 10, path: '/' });
     this.startingBalance = balance;
 
     console.log('[' + new Date() + '] Updated starting balanace');

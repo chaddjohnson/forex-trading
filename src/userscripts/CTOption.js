@@ -27,11 +27,11 @@ CTOption.prototype.initializeTimers = function() {
     var self = this;
 
     // Get the initial account balance if it's not set or if it is old.
-    if (!localStorage.startingBalance || !localStorage.startingBalanceLastUpdatedAt || new Date().getTime() - parseInt(localStorage.startingBalanceLastUpdatedAt) > 24 * 60 * 60 * 1000) {
+    if (!$.cookie('startingBalance') || !$.cookie('startingBalanceLastUpdatedAt') || new Date().getTime() - parseInt($.cookie('startingBalanceLastUpdatedAt')) > 24 * 60 * 60 * 1000) {
         // Wait for the page and balance display to load.
         window.setTimeout(function() {
             self.updateStartingBalance(self.getBalance());
-        }, 20 * 1000);  // 20 seconds
+        }, 15 * 1000);  // 15 seconds
     }
 
     // Update the starting balance at 6am UTC (10pm Central) each day.
@@ -331,22 +331,26 @@ CTOption.prototype.getBalance = function() {
 
 window.setTimeout(function() {
     // Cache credentials so the bot can automatically log in again if logged out.
-    localStorage.username = localStorage.username || prompt('Please enter your username');
-    localStorage.password = localStorage.password || prompt('Please enter your password');
+    if (!$.cookie('username')) {
+        $.cookie('username', prompt('Please enter your username'), { expires: 365 * 10, path: '/' });
+    }
+    if (!$.cookie('password')) {
+        $.cookie('password', prompt('Please enter your password'), { expires: 365 * 10, path: '/' });
+    }
 
-    if (!localStorage.username) {
+    if (!$.cookie('username')) {
         console.error('[' + new Date() + '] No username provided; terminating bot');
         return;
     }
-    if (!localStorage.password) {
+    if (!$.cookie('password')) {
         console.error('[' + new Date() + '] No password provided; terminating bot');
         return;
     }
 
     // Log in automatically if not logged in.
     if ($('.usernameval').length === 0) {
-        $('#txtUsername').val(localStorage.username);
-        $('#txtPassword').val(localStorage.password);
+        $('#txtUsername').val($.cookie('username'));
+        $('#txtPassword').val($.cookie('password'));
         $('#btnformLogin').click();
     }
     else {
