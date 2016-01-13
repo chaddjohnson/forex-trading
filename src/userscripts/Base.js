@@ -189,7 +189,7 @@ Base.prototype.updateStartingBalance = function(newBalance) {
     $.cookie('startingBalanceLastUpdatedAt', new Date().getTime(), { expires: 365 * 10, path: '/' });
     this.startingBalance = balance;
 
-    console.log('[' + new Date() + '] Updated starting balanace');
+    console.log('[' + new Date() + '] Updated starting balance');
 };
 
 Base.prototype.getInvestment = function() {
