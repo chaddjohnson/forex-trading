@@ -31,7 +31,7 @@ CTOption.prototype.initializeTimers = function() {
         // Wait for the page and balance display to load.
         window.setTimeout(function() {
             self.updateStartingBalance(self.getBalance());
-        }, 15 * 1000);  // 15 seconds
+        }, 20 * 1000);  // 20 seconds
     }
 
     // Update the starting balance at 6am UTC (10pm Central) each day.
@@ -54,7 +54,7 @@ CTOption.prototype.initializeTimers = function() {
         // Close the temporary window after a bit.
         window.setTimeout(function() {
             tempWindow.close();
-        }, 30 * 1000);  // 30 seconds
+        }, 15 * 1000);  // 15 seconds
     }, 30 * 60 * 1000);  // 30 minutes
 
     // Verify at a short interval that the assets are shown.
