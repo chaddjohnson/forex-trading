@@ -51,7 +51,7 @@ CTOption.prototype.initializeTimers = function() {
     window.setInterval(function() {
         var tempWindow = window.open('https://ctoption.com');
 
-        // Close the temporary window after a bit and reload the current page.
+        // Close the temporary window after a bit.
         window.setTimeout(function() {
             tempWindow.close();
         }, 30 * 1000);  // 30 seconds
