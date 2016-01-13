@@ -187,18 +187,19 @@ Base.prototype.updateStartingBalance = function(newBalance) {
 
     $.cookie('startingBalance', balance, { expires: 365 * 10, path: '/' });
     $.cookie('startingBalanceLastUpdatedAt', new Date().getTime(), { expires: 365 * 10, path: '/' });
-    this.startingBalance = balance;
 
     console.log('[' + new Date() + '] Updated starting balance');
 };
 
 Base.prototype.getInvestment = function() {
-    if (!this.startingBalance) {
+    var startingBalance = parseInt($.cookie('startingBalance'));
+
+    if (!startingBalance) {
         // Default to small trades if no account balance is available.
         return 5;
     }
 
-    investment = Math.floor(this.startingBalance * this.investmentBalancePercentage);
+    investment = Math.floor(startingBalance * this.investmentBalancePercentage);
 
     // Enforce minimum trade size.
     if (investment < this.minimumInvestment) {
@@ -211,8 +212,8 @@ Base.prototype.getInvestment = function() {
     }
 
     // Disallow trading more than 4% of the account balance.
-    if (investment > this.startingBalance * 0.04) {
-        investment = this.startingBalance * 0.04;
+    if (investment > startingBalance * 0.04) {
+        investment = startingBalance * 0.04;
     }
 
     return investment;
