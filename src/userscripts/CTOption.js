@@ -26,13 +26,26 @@ CTOption.prototype = Object.create(Base.prototype);
 CTOption.prototype.initializeTimers = function() {
     var self = this;
 
-    // Keep the bot informed of the account balance.
-    window.setInterval(function() {
-        // Get the latest balance, if available.
-        var newBalance = parseFloat($('#balance').text().replace(/[^0-9\.]/g, ''));
+    // Get the initial account balance if it's not set or if it is old.
+    if (!localStorage.startingBalance || !localStorage.startingBalanceLastUpdatedAt || new Date().getTime() - parseInt(localStorage.startingBalanceLastUpdatedAt) > 24 * 60 * 60 * 1000) {
+        // Wait for the page and balance display to load.
+        window.setTimeout(function() {
+            self.updateStartingBalance(self.getBalance());
+        }, 15 * 1000);  // 15 seconds
+    }
 
-        self.updateBalance(newBalance);
-    }, 15 * 1000);  // 15 seconds
+    // Update the starting balance at 6am UTC (10pm Central) each day.
+    window.setInterval(function() {
+        var date = new Date();
+        var brokerageHour = date.getUTCHours() + 2;
+        var brokerageDay = date.getUTCDay();
+        var brokerageMinute = date.getUTCMinutes();
+        var brokerageSecond = date.getUTCSeconds();
+
+        if (brokerageHour === 6 && brokerageMinute === 0) {
+            self.updateStartingBalance(self.getBalance());
+        }
+    }, 60 * 1000);
 
     // Keep the session active.
     window.setInterval(function() {
@@ -297,7 +310,7 @@ CTOption.prototype.payoutIsHighEnough = function(symbol) {
 };
 
 CTOption.prototype.tradeMakesBalanceTooHigh = function(investment) {
-    var balance = parseFloat($('#balance').text().replace(/[\$,]/g, ''));
+    var balance = this.getBalance();
     var positionCount = parseInt($('#open_positions').text());
 
     return (positionCount + 1) * investment >= balance * 0.45;
@@ -312,13 +325,14 @@ CTOption.prototype.initiateTrade = function(symbol) {
     $('#assetID_10_' + symbol + ' .apply_button').click();
 };
 
+CTOption.prototype.getBalance = function() {
+    return parseFloat($('#balance').text().replace(/[^0-9\.]/g, ''));
+};
+
 window.setTimeout(function() {
     // Cache credentials so the bot can automatically log in again if logged out.
     localStorage.username = localStorage.username || prompt('Please enter your username');
     localStorage.password = localStorage.password || prompt('Please enter your password');
-
-    // Ask for the starting balance.
-    localStorage.balance = localStorage.balance || prompt('Please enter your exact current account balance').replace(/[^0-9\.]/g, '');
 
     if (!localStorage.username) {
         console.error('[' + new Date() + '] No username provided; terminating bot');
@@ -326,10 +340,6 @@ window.setTimeout(function() {
     }
     if (!localStorage.password) {
         console.error('[' + new Date() + '] No password provided; terminating bot');
-        return;
-    }
-    if (!localStorage.balance) {
-        console.error('[' + new Date() + '] No balance provided; terminating bot');
         return;
     }
 

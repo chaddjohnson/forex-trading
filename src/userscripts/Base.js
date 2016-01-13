@@ -3,7 +3,7 @@ function Base(symbols) {
 
     self.symbols = symbols;
     self.minimumInvestment = 5;
-    self.maximumInvestment = 5000;
+    self.maximumInvestment = 10000;
     self.investmentBalancePercentage = 0.02;
     self.tradableSeconds = [59];  // [56, 57, 58, 59, 0];
 
@@ -54,6 +54,7 @@ Base.prototype.initializeTradingSocket = function() {
             var message = JSON.parse(event.data);
             var second = new Date().getSeconds();
             var investment = 0;
+            var balance = self.getBalance();
 
             switch (message.type) {
                 case tradingMessageTypes.CALL:
@@ -73,7 +74,7 @@ Base.prototype.initializeTradingSocket = function() {
                     investment = self.getInvestment();
 
                     // Ensure there is sufficient balance to trade.
-                    if (self.balance < investment) {
+                    if (balance < investment) {
                         console.error('[' + new Date() + '] Insufficient balance');
                         return;
                     }
@@ -99,7 +100,7 @@ Base.prototype.initializeTradingSocket = function() {
                     investment = self.getInvestment();
 
                     // Ensure there is sufficient balance to trade.
-                    if (self.balance < investment) {
+                    if (balance < investment) {
                         console.error('[' + new Date() + '] Insufficient balance');
                         return;
                     }
@@ -166,9 +167,13 @@ Base.prototype.initiateTrade = function(symbol) {
     throw 'initiateTrade() not implemented';
 };
 
-Base.prototype.updateBalance = function(newBalance) {
+Base.prototype.getBalance = function() {
+    throw 'getBalance() not implemented';
+};
+
+Base.prototype.updateStartingBalance = function(newBalance) {
     // Get the current balance.
-    var balance = parseFloat(localStorage.balance);
+    var balance = parseFloat(localStorage.startingBalance);
 
     if (newBalance || newBalance === 0) {
         // Update balance.
@@ -180,17 +185,20 @@ Base.prototype.updateBalance = function(newBalance) {
         return;
     }
 
-    localStorage.balance = balance;
-    this.balance = balance;
+    localStorage.startingBalance = balance;
+    localStorage.startingBalanceLastUpdatedAt = new Date().getTime();
+    this.startingBalance = balance;
+
+    console.log('[' + new Date() + '] Updated starting balanace');
 };
 
 Base.prototype.getInvestment = function() {
-    if (!this.balance) {
+    if (!this.startingBalance) {
         // Default to small trades if no account balance is available.
         return 5;
     }
 
-    investment = Math.floor(this.balance * this.investmentBalancePercentage);
+    investment = Math.floor(this.startingBalance * this.investmentBalancePercentage);
 
     // Enforce minimum trade size.
     if (investment < this.minimumInvestment) {
@@ -203,8 +211,8 @@ Base.prototype.getInvestment = function() {
     }
 
     // Disallow trading more than 4% of the account balance.
-    if (investment > this.balance * 0.04) {
-        investment = this.balance * 0.04;
+    if (investment > this.startingBalance * 0.04) {
+        investment = this.startingBalance * 0.04;
     }
 
     return investment;
