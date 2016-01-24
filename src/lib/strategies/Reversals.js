@@ -89,6 +89,23 @@ Reversals.prototype.analyze = function(dataPoint) {
                 callThisConfiguration = false;
             }
         }
+        if (configuration.stochastic) {
+            if (typeof dataPoint[configuration.stochastic.K] === 'number' && typeof dataPoint[configuration.stochastic.D] === 'number') {
+                // Determine if stochastic is not above the overbought line.
+                if (putThisConfiguration && (dataPoint[configuration.stochastic.K] <= configuration.stochastic.overbought || dataPoint[configuration.stochastic.D] <= configuration.stochastic.overbought)) {
+                    putThisConfiguration = false;
+                }
+
+                // Determine if stochastic is not below the oversold line.
+                if (callThisConfiguration && (dataPoint[configuration.stochastic.K] >= configuration.stochastic.oversold || dataPoint[configuration.stochastic.D] >= configuration.stochastic.oversold)) {
+                    callThisConfiguration = false;
+                }
+            }
+            else {
+                putThisConfiguration = false;
+                callThisConfiguration = false;
+            }
+        }
         if (configuration.prChannel) {
             if (dataPoint[configuration.prChannel.upper] && dataPoint[configuration.prChannel.lower]) {
                 // Determine if the upper regression bound was not breached by the high price.
@@ -122,6 +139,15 @@ Reversals.prototype.analyze = function(dataPoint) {
                 putThisConfiguration = false;
                 callThisConfiguration = false;
             }
+        }
+
+        // Don't trade minute ticks with large wicks.
+        if (putThisConfiguration && (dataPoint.high - Math.max(dataPoint.close, dataPoint.open)) / dataPoint.close >= 0.00018) {
+            putThisConfiguration = false;
+        }
+
+        if (callThisConfiguration && (Math.min(dataPoint.close, dataPoint.open) - dataPoint.low) / dataPoint.close >= 0.00018) {
+            callThisConfiguration = false;
         }
 
         // Determine whether to trade next tick.
