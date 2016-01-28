@@ -248,14 +248,20 @@ CTOption.prototype.callTrade = function(symbol, investment) {
     // Ensure the controls are displayed.
     this.showSymbolControls(symbol);
 
-    // Click the "CALL" button.
-    $('#assetID_10_' + symbol + ' .call_btn').click();
+    window.setTimeout(function() {
+        // Click the "CALL" button.
+        $('#assetID_10_' + symbol + ' .call_btn').click();
 
-    // Set the investment amount.
-    this.setTradeInvestment(symbol, investment);
+        window.setTimeout(function() {
+            // Set the investment amount.
+            this.setTradeInvestment(symbol, investment);
 
-    // Initiate trade.
-    this.initiateTrade(symbol);
+            window.setTimeout(function() {
+                // Initiate trade.
+                this.initiateTrade(symbol);
+            }, 3);
+        }, 3);
+    }, 3);
 };
 
 CTOption.prototype.putTrade = function(symbol, investment) {
@@ -288,14 +294,20 @@ CTOption.prototype.putTrade = function(symbol, investment) {
     // Ensure the controls are displayed.
     this.showSymbolControls(symbol);
 
-    // Click the "CALL" button.
-    $('#assetID_10_' + symbol + ' .put_btn').click();
+    window.setTimeout(function() {
+        // Click the "PUT" button.
+        $('#assetID_10_' + symbol + ' .put_btn').click();
 
-    // Set the investment amount.
-    this.setTradeInvestment(symbol, investment);
+        window.setTimeout(function() {
+            // Set the investment amount.
+            this.setTradeInvestment(symbol, investment);
 
-    // Initiate trade.
-    this.initiateTrade(symbol);
+            window.setTimeout(function() {
+                // Initiate trade.
+                this.initiateTrade(symbol);
+            }, 3);
+        }, 3);
+    }, 3);
 };
 
 CTOption.prototype.payoutIsHighEnough = function(symbol) {
