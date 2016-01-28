@@ -5,6 +5,7 @@ function CTOption() {
 
     var self = this;
     var symbols = ['AUDCAD', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'CADJPY', 'EURGBP', 'EURUSD', 'GBPJPY', 'NZDUSD', 'USDCAD', 'USDCHF', 'USDJPY'];
+    var tradableSymbols = ['AUDJPY'];
 
     Base.call(self, symbols);
 
@@ -13,7 +14,7 @@ function CTOption() {
     $('#bnmain .hyperfilter li')[3].click()
 
     // Show controls for all symbols.
-    symbols.forEach(function(symbol) {
+    tradableSymbols.forEach(function(symbol) {
         self.showSymbolControls(symbol);
     });
 
