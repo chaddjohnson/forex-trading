@@ -219,6 +219,8 @@ CTOption.prototype.showSymbolControls = function(symbol) {
 };
 
 CTOption.prototype.callTrade = function(symbol, investment) {
+    var self = this;
+
     // Ensure necessary parameters are present.
     if (!symbol) {
         console.error('[' + new Date() + '] No symbol provided');
@@ -233,12 +235,12 @@ CTOption.prototype.callTrade = function(symbol, investment) {
     }
 
     // Verify payout is high enough to trade.
-    if (!this.payoutIsHighEnough(symbol)) {
+    if (!self.payoutIsHighEnough(symbol)) {
         return;
     }
 
     // Ensure it's okay to trade based on the account balance.
-    if (this.tradeMakesBalanceTooHigh(investment)) {
+    if (self.tradeMakesBalanceTooHigh(investment)) {
         console.warn('[' + new Date() + '] Maximum open positions reached; aborting trade for ' + symbol);
         return;
     }
@@ -246,7 +248,7 @@ CTOption.prototype.callTrade = function(symbol, investment) {
     console.log('[' + new Date() + '] CALL for ' + symbol + ' at ' + new Date() + ' for $' + investment);
 
     // Ensure the controls are displayed.
-    this.showSymbolControls(symbol);
+    self.showSymbolControls(symbol);
 
     window.setTimeout(function() {
         // Click the "CALL" button.
@@ -254,17 +256,19 @@ CTOption.prototype.callTrade = function(symbol, investment) {
 
         window.setTimeout(function() {
             // Set the investment amount.
-            this.setTradeInvestment(symbol, investment);
+            self.setTradeInvestment(symbol, investment);
 
             window.setTimeout(function() {
                 // Initiate trade.
-                this.initiateTrade(symbol);
+                self.initiateTrade(symbol);
             }, 3);
         }, 3);
     }, 3);
 };
 
 CTOption.prototype.putTrade = function(symbol, investment) {
+    var self = this;
+
     // Ensure necessary parameters are present.
     if (!symbol) {
         console.error('[' + new Date() + '] No symbol provided');
@@ -279,12 +283,12 @@ CTOption.prototype.putTrade = function(symbol, investment) {
     }
 
     // Verify payout is high enough to trade.
-    if (!this.payoutIsHighEnough(symbol)) {
+    if (!self.payoutIsHighEnough(symbol)) {
         return;
     }
 
     // Ensure it's okay to trade based on the account balance.
-    if (this.tradeMakesBalanceTooHigh(investment)) {
+    if (self.tradeMakesBalanceTooHigh(investment)) {
         console.warn('[' + new Date() + '] Maximum open positions reached; aborting trade for ' + symbol);
         return;
     }
@@ -292,7 +296,7 @@ CTOption.prototype.putTrade = function(symbol, investment) {
     console.log('[' + new Date() + '] PUT for ' + symbol + ' at ' + new Date() + ' for $' + investment + '.');
 
     // Ensure the controls are displayed.
-    this.showSymbolControls(symbol);
+    self.showSymbolControls(symbol);
 
     window.setTimeout(function() {
         // Click the "PUT" button.
@@ -300,11 +304,11 @@ CTOption.prototype.putTrade = function(symbol, investment) {
 
         window.setTimeout(function() {
             // Set the investment amount.
-            this.setTradeInvestment(symbol, investment);
+            self.setTradeInvestment(symbol, investment);
 
             window.setTimeout(function() {
                 // Initiate trade.
-                this.initiateTrade(symbol);
+                self.initiateTrade(symbol);
             }, 3);
         }, 3);
     }, 3);
