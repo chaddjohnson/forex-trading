@@ -264,7 +264,7 @@ CTOption.prototype.callTrade = function(symbol, investment) {
                 self.initiateTrade(symbol);
             }, 3);
         }, 3);
-    }, 3);
+    }, 10);
 };
 
 CTOption.prototype.putTrade = function(symbol, investment) {
@@ -312,7 +312,7 @@ CTOption.prototype.putTrade = function(symbol, investment) {
                 self.initiateTrade(symbol);
             }, 3);
         }, 3);
-    }, 3);
+    }, 10);
 };
 
 CTOption.prototype.payoutIsHighEnough = function(symbol) {
