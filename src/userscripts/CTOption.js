@@ -1,4 +1,6 @@
 var Base = require('./Base');
+var Holidays = require('date-holidays');
+var holidays = new Holidays('US');
 
 function CTOption() {
     this.constructor = CTOption;
@@ -64,6 +66,13 @@ CTOption.prototype.initializeTimers = function() {
         var brokerageHour = date.getUTCHours() + 2;
         var brokerageDay = date.getUTCDay();
         var brokerageMinute = date.getUTCMinutes();
+
+        var holiday = holidays.isHoliday(new Date());
+
+        if (holiday && (holiday.type === 'public' || holiday.type === 'bank')) {
+            // Do not check on public and bank holidays.
+            return;
+        }
 
         // Don't check during non-tradable hours.
         if (brokerageHour >= 0 && brokerageHour < 7) {

@@ -1,6 +1,7 @@
 {
   "name": "forex-trading",
   "dependencies": {
+    "date-holidays": "^0.1.3",
     "forever": "^0.15.1",
     "lodash": "^3.10.1",
     "nodejs-websocket": "^1.4.0",
