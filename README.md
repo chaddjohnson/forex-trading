@@ -40,7 +40,7 @@ the userscript will automatically run.
 ### Usage
 
 1. Open a terminal and go to the directory where you cloned this repository.
-2. Run `./start.sh`.
+2. Run `npm start`.
 3. Enter your credentials when prompted.
 4. In the address bar, on the right side, you will likely see a gray shield icon. Click this, and a menu
 will appear. In this menu, click the "Load unsafe scripts" button. This should cause the web page to reload.

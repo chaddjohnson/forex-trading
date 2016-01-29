@@ -1,9 +1,13 @@
 {
   "name": "forex-trading",
   "dependencies": {
+    "forever": "^0.15.1",
     "lodash": "^3.10.1",
     "nodejs-websocket": "^1.4.0",
     "regression": "^1.2.1"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "scripts": {
+    "start": "forever -f ./src/server/app.js"
+  }
 }
