@@ -17,7 +17,7 @@ var messageTypes = {
 // Settings
 var symbols = ['AUDCAD', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'CADJPY', 'EURGBP', 'EURUSD', 'GBPJPY', 'NZDUSD', 'USDCAD', 'USDCHF', 'USDJPY'];
 var tradableSymbols = ['AUDJPY'];
-var seconds = [58, 59, 0];  // [56, 57, 58, 59, 0];
+var seconds = [14, 29, 58, 59, 0];  // [14, 29, 56, 57, 58, 59, 0];
 var strategyFn = strategies.Reversals;
 
 var disconnectedAtTimestamp = 0;
