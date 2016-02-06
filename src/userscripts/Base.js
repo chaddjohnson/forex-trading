@@ -4,7 +4,7 @@ function Base(symbols) {
     self.symbols = symbols;
     self.minimumInvestment = 5;
     self.maximumInvestment = 10000;
-    self.investmentBalancePercentage = 0.02;
+    self.investmentBalancePercentage = 0.025;
     self.tradableSeconds = [59];  // [56, 57, 58, 59, 0];
 
     self.initializeTradingSocket();
