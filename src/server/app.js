@@ -16,8 +16,9 @@ var messageTypes = {
 
 // Settings
 var symbols = ['AUDCAD', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'CADJPY', 'EURGBP', 'EURUSD', 'GBPJPY', 'NZDUSD', 'USDCAD', 'USDCHF', 'USDJPY'];
-var tradableSymbols = ['AUDJPY'];
 var seconds = [14, 29, 58, 59, 0];  // [14, 29, 56, 57, 58, 59, 0];
+var tradableSymbols = ['AUDJPY'];
+var tradableSeconds = [59];
 var strategyFn = strategies.Reversals;
 
 var disconnectedAtTimestamp = 0;
@@ -184,7 +185,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                     fs.appendFileSync('./data.csv', JSON.stringify(dataPoint) + '\n');
 
                     // Only trade if the symbol is whitelisted as able to be traded.
-                    if (tradableSymbols.indexOf(symbol) > -1) {
+                    if (tradableSymbols.indexOf(symbol) > -1 && tradableSeconds.indexOf(second) > -1) {
                         // Analyze the data to date.
                         analysis = symbolStrategies[symbol][second].analyze(dataPoint);
 
