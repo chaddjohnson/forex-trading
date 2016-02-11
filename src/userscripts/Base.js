@@ -199,7 +199,7 @@ Base.prototype.getInvestment = function() {
         return 5;
     }
 
-    investment = Math.floor(startingBalance * this.investmentBalancePercentage);
+    investment = Math.round(startingBalance * this.investmentBalancePercentage);
 
     // Enforce minimum trade size.
     if (investment < this.minimumInvestment) {
