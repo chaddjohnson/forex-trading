@@ -141,17 +141,6 @@ Reversals.prototype.analyze = function(dataPoint) {
             }
         }
 
-        if (configuration.wick) {
-            // Don't trade minute ticks with large wicks.
-            if (putThisConfiguration && (dataPoint.high - Math.max(dataPoint.close, dataPoint.open)) / dataPoint.close >= 0.00018) {
-                putThisConfiguration = false;
-            }
-
-            if (callThisConfiguration && (Math.min(dataPoint.close, dataPoint.open) - dataPoint.low) / dataPoint.close >= 0.00018) {
-                callThisConfiguration = false;
-            }
-        }
-
         // Determine whether to trade next tick.
         put = put || putThisConfiguration;
         call = call || callThisConfiguration;
