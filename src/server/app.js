@@ -161,7 +161,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         var utcHour = date.getUTCHours();
         var drift = date.getMilliseconds();
         var currentSecond = date.getSeconds();
-        var analysis = '';
+        var analysis = null;
         var dataPoint;
 
         // Reset data each Sunday at 5pm Central.
@@ -191,11 +191,14 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
 
                         // If analysis sends back a positive result, then tell the client to initiate a trade.
                         if (analysis) {
-                            console.log('[' + new Date() + '] ' + analysis + ' for ' + symbol);
+                            console.log('[' + new Date() + '] ' + analysis.type + ' for ' + symbol);
 
                             client.sendText(JSON.stringify({
-                                type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
-                                data: {symbol: symbol}
+                                type: analysis.type === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
+                                data: {
+                                    symbol: symbol,
+                                    count: analysis.count
+                                }
                             }));
                         }
                     }

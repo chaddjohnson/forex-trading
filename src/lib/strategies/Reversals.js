@@ -15,6 +15,8 @@ Reversals.prototype.analyze = function(dataPoint) {
     var call = false;
     var putThisConfiguration = false;
     var callThisConfiguration = false;
+    var putCount = 0;
+    var callCount = 0;
 
     // Process studies.
     self.tick(dataPoint);
@@ -141,6 +143,13 @@ Reversals.prototype.analyze = function(dataPoint) {
             }
         }
 
+        if (putThisConfiguration) {
+            putCount++;
+        }
+        if (callThisConfiguration) {
+            callCount++;
+        }
+
         // Determine whether to trade next tick.
         put = put || putThisConfiguration;
         call = call || callThisConfiguration;
@@ -150,11 +159,17 @@ Reversals.prototype.analyze = function(dataPoint) {
     self.previousDataPoint = dataPoint;
 
     if (put) {
-        return 'PUT';
+        return {
+            type: 'PUT',
+            count: putCount
+        };
     }
 
     if (call) {
-        return 'CALL';
+        return {
+            type: 'CALL',
+            count: callCount
+        };
     }
 
     return null;

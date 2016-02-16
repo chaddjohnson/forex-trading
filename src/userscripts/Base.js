@@ -71,7 +71,7 @@ Base.prototype.initializeTradingSocket = function() {
                         return;
                     }
 
-                    investment = self.getInvestment();
+                    investment = self.getInvestment() * message.data.count;
 
                     // Ensure there is sufficient balance to trade.
                     if (balance < investment) {
@@ -97,7 +97,7 @@ Base.prototype.initializeTradingSocket = function() {
                         return;
                     }
 
-                    investment = self.getInvestment();
+                    investment = self.getInvestment() * message.data.count;
 
                     // Ensure there is sufficient balance to trade.
                     if (balance < investment) {
