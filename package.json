@@ -5,7 +5,7 @@
     "forever": "^0.15.1",
     "lodash": "^3.10.1",
     "nodejs-websocket": "^1.4.0",
-    "regression": "^1.2.1"
+    "regression": "git+https://github.com/chaddjohnson/regression-js.git"
   },
   "devDependencies": {},
   "scripts": {
