@@ -125,23 +125,6 @@ Reversals.prototype.analyze = function(dataPoint) {
                 callThisConfiguration = false;
             }
         }
-        if (configuration.trendPrChannel) {
-            if (self.previousDataPoint && dataPoint[configuration.trendPrChannel.regression] && self.previousDataPoint[configuration.trendPrChannel.regression]) {
-                // Determine if a long-term downtrend is not occurring.
-                if (putThisConfiguration && dataPoint[configuration.trendPrChannel.regression] > self.previousDataPoint[configuration.trendPrChannel.regression]) {
-                    putThisConfiguration = false;
-                }
-
-                // Determine if a long-term uptrend is not occurring.
-                if (callThisConfiguration && dataPoint[configuration.trendPrChannel.regression] < self.previousDataPoint[configuration.trendPrChannel.regression]) {
-                    callThisConfiguration = false;
-                }
-            }
-            else {
-                putThisConfiguration = false;
-                callThisConfiguration = false;
-            }
-        }
 
         if (putThisConfiguration) {
             putCount++;
