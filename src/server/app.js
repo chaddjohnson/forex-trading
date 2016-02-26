@@ -98,7 +98,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                             });
 
                             // Log data to a file.
-                            fs.appendFileSync('./data.csv', JSON.stringify(quote) + '\n');
+                            fs.appendFileSync('./data.txt', JSON.stringify(quote) + '\n');
                         }
                     });
 
@@ -182,7 +182,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                     }
 
                     // Log data to a file.
-                    fs.appendFileSync('./data.csv', JSON.stringify(dataPoint) + '\n');
+                    fs.appendFileSync('./data.txt', JSON.stringify(dataPoint) + '\n');
 
                     // Only trade if the symbol is whitelisted as able to be traded.
                     if (tradableSymbols.indexOf(symbol) > -1 && tradableSeconds.indexOf(second) > -1) {
