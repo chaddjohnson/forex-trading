@@ -7,7 +7,7 @@ function CTOption() {
 
     var self = this;
     var symbols = ['AUDCAD', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'CADJPY', 'EURGBP', 'EURUSD', 'GBPJPY', 'NZDUSD', 'USDCAD', 'USDCHF', 'USDJPY'];
-    var tradableSymbols = ['AUDJPY'];
+    var tradableSymbols = ['AUDJPY', 'AUDUSD', 'USDJPY'];
 
     Base.call(self, symbols);
 
