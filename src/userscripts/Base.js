@@ -13,9 +13,16 @@ function Base(symbols) {
     self.piggybackDataFeed();
 
     // Keep piggybacking active.
-    window.setInterval(function() {
-        if (!io.sockets['https://client.ctoption.com:443'].transport.websocket.piggybacked) {
-            self.piggybackDataFeed();
+    var piggybackInterval = window.setInterval(function() {
+        try {
+            if (!io.sockets['https://client.ctoption.com:443'].transport.websocket.piggybacked) {
+                self.piggybackDataFeed();
+            }
+        }
+        catch (error) {
+            // The websocket is unavailable, so refresh the page.
+            window.clearInterval(piggybackInterval);
+            window.location.reload(true);
         }
     }, 5000);
 }
