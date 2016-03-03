@@ -12,7 +12,7 @@ function Base(symbols) {
     // Begin piggybacking on data feed.
     self.piggybackDataFeed();
 
-    // Keep piggybacking active.
+    // Ensure piggybacking remains active.
     var piggybackInterval = window.setInterval(function() {
         try {
             if (!io.sockets['https://client.ctoption.com:443'].transport.websocket.piggybacked) {
@@ -24,7 +24,7 @@ function Base(symbols) {
             window.clearInterval(piggybackInterval);
             window.location.reload(true);
         }
-    }, 5000);
+    }, 1000);
 }
 
 Base.prototype.getTradingMessageTypes = function() {
