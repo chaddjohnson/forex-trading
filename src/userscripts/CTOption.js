@@ -383,4 +383,4 @@ window.setTimeout(function() {
         // Instantiate a new client, and make it available globally.
         window.bot = new CTOption();
     }
-}, 5 * 1000);  // 5 seconds
+}, 2 * 1000);  // 2 seconds
