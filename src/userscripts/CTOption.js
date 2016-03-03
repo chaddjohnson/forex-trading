@@ -219,7 +219,7 @@ CTOption.prototype.piggybackDataFeed = function() {
 };
 
 CTOption.prototype.showSymbolControls = function(symbol) {
-    if ($('#assetID_10_' + symbol + ' .option_container').length > 0) {
+    if ($('#assetID_10_' + symbol + ' .option_container').length > 0 || $('#assetID_10_' + symbol + ' .call_btn').length > 0) {
         // Controls are already shown.
         return;
     }
