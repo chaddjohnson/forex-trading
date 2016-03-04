@@ -222,13 +222,15 @@ CTOption.prototype.piggybackDataFeed = function() {
 };
 
 CTOption.prototype.showSymbolControls = function(symbol) {
-    if ($('#assetID_10_' + symbol + ' .option_container').length > 0 || $('#assetID_10_' + symbol + ' .call_btn').length > 0) {
+    var koContext = ko.contextFor($('#assetID_10_' + symbol + ' .box_header')[0]);
+
+    if (koContext.$data.opened()) {
         // Controls are already shown.
         return;
     }
 
-    // Controls are not shown, so trigger showing them.
-    $('#assetID_10_' + symbol + ' .box_header').click();
+    // Show the control via Knockout.
+    koContext.$parent.openAsset(koContext.$data);
 };
 
 CTOption.prototype.callTrade = function(symbol, investment) {
@@ -260,23 +262,18 @@ CTOption.prototype.callTrade = function(symbol, investment) {
 
     console.log('[' + new Date() + '] CALL for ' + symbol + ' at ' + new Date() + ' for $' + investment);
 
-    // Ensure the controls are displayed.
-    self.showSymbolControls(symbol);
+    // Click the "CALL" button.
+    $('#assetID_10_' + symbol + ' .call_btn').click();
 
     window.setTimeout(function() {
-        // Click the "CALL" button.
-        $('#assetID_10_' + symbol + ' .call_btn').click();
+        // Set the investment amount.
+        self.setTradeInvestment(symbol, investment);
 
         window.setTimeout(function() {
-            // Set the investment amount.
-            self.setTradeInvestment(symbol, investment);
-
-            window.setTimeout(function() {
-                // Initiate trade.
-                self.initiateTrade(symbol);
-            }, 10);
+            // Initiate trade.
+            self.initiateTrade(symbol);
         }, 10);
-    }, 200);
+    }, 10);
 };
 
 CTOption.prototype.putTrade = function(symbol, investment) {
@@ -308,23 +305,18 @@ CTOption.prototype.putTrade = function(symbol, investment) {
 
     console.log('[' + new Date() + '] PUT for ' + symbol + ' at ' + new Date() + ' for $' + investment + '.');
 
-    // Ensure the controls are displayed.
-    self.showSymbolControls(symbol);
+    // Click the "PUT" button.
+    $('#assetID_10_' + symbol + ' .put_btn').click();
 
     window.setTimeout(function() {
-        // Click the "PUT" button.
-        $('#assetID_10_' + symbol + ' .put_btn').click();
+        // Set the investment amount.
+        self.setTradeInvestment(symbol, investment);
 
         window.setTimeout(function() {
-            // Set the investment amount.
-            self.setTradeInvestment(symbol, investment);
-
-            window.setTimeout(function() {
-                // Initiate trade.
-                self.initiateTrade(symbol);
-            }, 10);
+            // Initiate trade.
+            self.initiateTrade(symbol);
         }, 10);
-    }, 200);
+    }, 10);
 };
 
 CTOption.prototype.payoutIsHighEnough = function(symbol) {
