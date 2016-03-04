@@ -7,18 +7,14 @@ function CTOption() {
 
     var self = this;
     var symbols = ['AUDCAD', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'CADJPY', 'EURGBP', 'EURUSD', 'GBPJPY', 'NZDUSD', 'USDCAD', 'USDCHF', 'USDJPY'];
-    var tradableSymbols = ['AUDJPY', 'AUDCAD', 'USDJPY'];
 
     Base.call(self, symbols);
+
+    self.tradableSymbols = ['AUDJPY', 'AUDCAD', 'USDJPY'];
 
     // Select the 5-minute "Hyper" tab.
     $('#bnmain .tabs .tab')[3].click();
     $('#bnmain .hyperfilter li')[3].click()
-
-    // Show controls for all symbols.
-    tradableSymbols.forEach(function(symbol) {
-        self.showSymbolControls(symbol);
-    });
 
     self.initializeTimers();
 }
@@ -28,6 +24,13 @@ CTOption.prototype = Object.create(Base.prototype);
 
 CTOption.prototype.initializeTimers = function() {
     var self = this;
+
+    // Ensure controls for all symbols are always shown.
+    window.setInterval(function() {
+        self.tradableSymbols.forEach(function(symbol) {
+            self.showSymbolControls(symbol);
+        });
+    }, 5 * 1000);
 
     // Get the initial account balance if it's not set or if it is old.
     if (!$.cookie('startingBalance') || !$.cookie('startingBalanceLastUpdatedAt') || new Date().getTime() - parseInt($.cookie('startingBalanceLastUpdatedAt')) > 24 * 60 * 60 * 1000) {
@@ -224,7 +227,7 @@ CTOption.prototype.showSymbolControls = function(symbol) {
         return;
     }
 
-    // Show the controls.
+    // Controls are not shown, so trigger showing them.
     $('#assetID_10_' + symbol + ' .box_header').click();
 };
 
