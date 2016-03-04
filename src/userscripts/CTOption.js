@@ -10,7 +10,7 @@ function CTOption() {
 
     Base.call(self, symbols);
 
-    self.tradableSymbols = ['AUDJPY', 'AUDCAD', 'USDJPY'];
+    self.tradableSymbols = [];  // ['AUDJPY', 'AUDCAD', 'USDJPY'];
 
     // Select the 5-minute "Hyper" tab.
     $('#bnmain .tabs .tab')[3].click();
