@@ -15,9 +15,9 @@ var messageTypes = {
 };
 
 // Settings
-var symbols = ['AUDCAD', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'CADJPY', 'EURGBP', 'EURUSD', 'GBPJPY', 'NZDUSD', 'USDCAD', 'USDCHF', 'USDJPY'];
-var seconds = [14, 29, 58, 59, 0];  // [14, 29, 56, 57, 58, 59, 0];
-var tradableSymbols = [];  // ['AUDJPY', 'AUDCAD', 'USDJPY'];
+var symbols = ['AUDCAD', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'CADJPY', 'EURGBP', 'EURUSD', 'GBPJPY', 'NZDUSD', 'USDCAD', 'USDCHF', 'USDJPY', 'EURJPY', 'GBPUSD'];
+var seconds = [58, 59];  // [14, 29, 56, 57, 58, 59, 0]
+var tradableSymbols = [];  // ['AUDJPY', 'AUDCAD', 'USDJPY']
 var tradableSeconds = [59];
 var strategyFn = strategies.Reversals;
 
