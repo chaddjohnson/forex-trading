@@ -6,11 +6,11 @@ function CTOption() {
     this.constructor = CTOption;
 
     var self = this;
-    var symbols = ['AUDCAD', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'CADJPY', 'EURGBP', 'EURUSD', 'GBPJPY', 'NZDUSD', 'USDCAD', 'USDCHF', 'USDJPY'];
+    var symbols = ['AUDCAD', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'CADJPY', 'EURGBP', 'EURUSD', 'GBPJPY', 'NZDUSD', 'USDCAD', 'USDCHF', 'USDJPY', 'EURJPY', 'GBPUSD'];
 
     Base.call(self, symbols);
 
-    self.tradableSymbols = [];  // ['AUDJPY', 'AUDCAD', 'USDJPY'];
+    self.tradableSymbols = [];  // ['AUDJPY', 'AUDCAD', 'USDJPY']
 
     // Select the 5-minute "Hyper" tab.
     $('#bnmain .tabs .tab')[3].click();

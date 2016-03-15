@@ -4,8 +4,8 @@ function Base(symbols) {
     self.symbols = symbols;
     self.minimumInvestment = 5;
     self.maximumInvestment = 10000;
-    self.investmentBalancePercentage = 0.02;
-    self.tradableSeconds = [59];  // [14, 29, 56, 57, 58, 59, 0];
+    self.investmentBalancePercentage = 0.005;  // 0.5%
+    self.tradableSeconds = [59];  // [14, 29, 56, 57, 58, 59, 0]
 
     self.initializeTradingSocket();
 
@@ -219,8 +219,8 @@ Base.prototype.getInvestment = function() {
     }
 
     // Disallow trading more than 4% of the account balance.
-    if (investment > startingBalance * 0.04) {
-        investment = startingBalance * 0.04;
+    if (investment > this.getBalance() * 0.04) {
+        investment = Math.floor(this.getBalance() * 0.04);
     }
 
     return investment;
