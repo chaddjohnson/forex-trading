@@ -17,10 +17,6 @@ now hooked into the web socket, forwards the data to our own web socket service 
 then analyzes the data against a strategy and various studies and makes decisions as to whether
 to instruct the userscript to place trades (CALLs and PUTs).
 
-### Available bots
-
-Currently only one bot exists, and that is for [CTOption](https://ctoption.com/).
-
 ### Setup
 
 1. Install Node.js.
@@ -29,7 +25,7 @@ Currently only one bot exists, and that is for [CTOption](https://ctoption.com/)
 4. Open a terminal and go to the directory where you cloned this repository.
 5. Install dependencies via `npm install`.
 6. Install the [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) Chrome extension.
-7. Install the userscript for CTOption in Tampermonkey. This simply involves copying and pasting the entire
+7. Install a userscript in src/userscripts for Tampermonkey. This simply involves copying and pasting the entire
 contents of `src/userscripts/build/ctoption.js` into a new Tampermonkey script. Now enable the script (a green
 icon in the Tampermonkey dashboard means its enabled). Nothing else is required; when visiting ctoption.com,
 the userscript will automatically run.

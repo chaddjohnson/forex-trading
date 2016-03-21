@@ -137,6 +137,7 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
 
         // Nothing can be done if there still are no quotes.
         if (symbolQuotes.length === 0) {
+            resetData(symbol, second);
             return;
         }
 
@@ -228,16 +229,26 @@ symbols.forEach(function(symbol) {
     });
 });
 
-function resetData() {
-    symbols.forEach(function(symbol) {
-        seconds.forEach(function(second) {
-            quotes[symbol][second] = [];
+function resetData(symbol, second) {
+    if (symbol && second) {
+        quotes[symbol][second] = [];
 
-            // Reset data for strategies.
-            symbolStrategies[symbol][second].reset();
+        // Reset data for strategies.
+        symbolStrategies[symbol][second].reset();
+
+        console.log('[' + new Date() + '] Tick data reset for ' + symbol);
+    }
+    else {
+        symbols.forEach(function(currentSymbol) {
+            seconds.forEach(function(currentSecond) {
+                quotes[currentSymbol][currentSecond] = [];
+
+                // Reset data for strategies.
+                symbolStrategies[currentSymbol][currentSecond].reset();
+            });
         });
-    });
-    console.log('[' + new Date() + '] Tick data reset');
+        console.log('[' + new Date() + '] Tick data reset');
+    }
 }
 
 function restartBot() {
