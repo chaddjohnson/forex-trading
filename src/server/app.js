@@ -62,10 +62,10 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         disconnectedAtTimestamp = new Date().getTime();
 
         // Stop the timer on disconnection.
-        if (timer) {
-            clearTimeout(timer);
-            timer = null;
-        }
+        // if (timer) {
+        //     clearTimeout(timer);
+        //     timer = null;
+        // }
 
         clientConnected = false;
 
@@ -107,10 +107,10 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                 case messageTypes.CONNECTED:
                     console.log('[' + new Date() + '] Data socket connected');
 
-                    if (!timer) {
-                        // Restart the timer.
-                        tickTimer();
-                    }
+                    // if (!timer) {
+                    //     // Restart the timer.
+                    //     tickTimer();
+                    // }
 
                     break;
 
@@ -118,10 +118,10 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
                     console.log('[' + new Date() + '] Data socket disconnected');
 
                     // Stop the timer on disconnection.
-                    if (timer) {
-                        clearTimeout(timer);
-                        timer = null;
-                    }
+                    // if (timer) {
+                    //     clearTimeout(timer);
+                    //     timer = null;
+                    // }
 
                     break;
             }
@@ -131,86 +131,86 @@ var serverOptions = ws.createServer(serverOptions, function(client) {
         }
     });
 
-    function calculateMinuteData(symbol, second) {
-        var symbolQuotes = quotes[symbol][second];
-        var dataPoint = null;
+    // function calculateMinuteData(symbol, second) {
+    //     var symbolQuotes = quotes[symbol][second];
+    //     var dataPoint = null;
 
-        // Nothing can be done if there still are no quotes.
-        if (symbolQuotes.length === 0) {
-            resetData(symbol, second);
-            return;
-        }
+    //     // Nothing can be done if there still are no quotes.
+    //     if (symbolQuotes.length === 0) {
+    //         resetData(symbol, second);
+    //         return;
+    //     }
 
-        dataPoint = {
-            symbol: symbol,
-            second: second,
-            high: _.max(symbolQuotes, 'price').price,
-            low: _.min(symbolQuotes, 'price').price,
-            open: _.first(symbolQuotes).price,
-            close: _.last(symbolQuotes).price,
-            timestamp: new Date().getTime()
-        };
+    //     dataPoint = {
+    //         symbol: symbol,
+    //         second: second,
+    //         high: _.max(symbolQuotes, 'price').price,
+    //         low: _.min(symbolQuotes, 'price').price,
+    //         open: _.first(symbolQuotes).price,
+    //         close: _.last(symbolQuotes).price,
+    //         timestamp: new Date().getTime()
+    //     };
 
-        quotes[symbol][second] = [];
+    //     quotes[symbol][second] = [];
 
-        return dataPoint;
-    }
+    //     return dataPoint;
+    // }
 
-    function tickTimer() {
-        var date = new Date();
-        var utcDay = date.getUTCDay();
-        var utcHour = date.getUTCHours();
-        var drift = date.getMilliseconds();
-        var currentSecond = date.getSeconds();
-        var analysis = '';
-        var dataPoint;
+    // function tickTimer() {
+    //     var date = new Date();
+    //     var utcDay = date.getUTCDay();
+    //     var utcHour = date.getUTCHours();
+    //     var drift = date.getMilliseconds();
+    //     var currentSecond = date.getSeconds();
+    //     var analysis = '';
+    //     var dataPoint;
 
-        // Reset data each Sunday at 3:30pm Central.
-        if (utcDay === 0 && utcHour === 21 && date.getMinutes() === 30 && date.getSeconds() === 0) {
-            resetData();
-        }
+    //     // Reset data each Sunday at 3:30pm Central.
+    //     if (utcDay === 0 && utcHour === 21 && date.getMinutes() === 30 && date.getSeconds() === 0) {
+    //         resetData();
+    //     }
 
-        seconds.forEach(function(second) {
-            // Enter trades only on specific seconds.
-            if (currentSecond === second) {
-                // Perform analysis for each symbol.
-                symbols.forEach(function(symbol) {
-                    dataPoint = calculateMinuteData(symbol, second);
+    //     seconds.forEach(function(second) {
+    //         // Enter trades only on specific seconds.
+    //         if (currentSecond === second) {
+    //             // Perform analysis for each symbol.
+    //             symbols.forEach(function(symbol) {
+    //                 dataPoint = calculateMinuteData(symbol, second);
 
-                    if (!dataPoint) {
-                        // No data point available, so no analysis can take place.
-                        return;
-                    }
+    //                 if (!dataPoint) {
+    //                     // No data point available, so no analysis can take place.
+    //                     return;
+    //                 }
 
-                    // Log data to a file.
-                    fs.appendFileSync('./data.txt', JSON.stringify(dataPoint) + '\n');
+    //                 // Log data to a file.
+    //                 fs.appendFileSync('./data.txt', JSON.stringify(dataPoint) + '\n');
 
-                    // Only trade if the symbol is whitelisted as able to be traded.
-                    if (tradableSymbols.indexOf(symbol) > -1 && tradableSeconds.indexOf(second) > -1) {
-                        // Analyze the data to date.
-                        analysis = symbolStrategies[symbol][second].analyze(dataPoint);
+    //                 // Only trade if the symbol is whitelisted as able to be traded.
+    //                 if (tradableSymbols.indexOf(symbol) > -1 && tradableSeconds.indexOf(second) > -1) {
+    //                     // Analyze the data to date.
+    //                     analysis = symbolStrategies[symbol][second].analyze(dataPoint);
 
-                        // If analysis sends back a positive result, then tell the client to initiate a trade.
-                        if (analysis) {
-                            console.log('[' + new Date() + '] ' + analysis + ' for ' + symbol);
+    //                     // If analysis sends back a positive result, then tell the client to initiate a trade.
+    //                     if (analysis) {
+    //                         console.log('[' + new Date() + '] ' + analysis + ' for ' + symbol);
 
-                            client.sendText(JSON.stringify({
-                                type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
-                                data: {symbol: symbol}
-                            }));
-                        }
-                    }
-                });
-            }
-        });
+    //                         client.sendText(JSON.stringify({
+    //                             type: analysis === 'CALL' ? messageTypes.CALL : messageTypes.PUT,
+    //                             data: {symbol: symbol}
+    //                         }));
+    //                     }
+    //                 }
+    //             });
+    //         }
+    //     });
 
-        timer = setTimeout(tickTimer, 1000 - drift);
-    }
+    //     timer = setTimeout(tickTimer, 1000 - drift);
+    // }
 
-    if (!timer) {
-        // Start the timer.
-        tickTimer();
-    }
+    // if (!timer) {
+    //     // Start the timer.
+    //     tickTimer();
+    // }
 }).listen(port);
 
 console.log('[' + new Date() + '] Server started');
